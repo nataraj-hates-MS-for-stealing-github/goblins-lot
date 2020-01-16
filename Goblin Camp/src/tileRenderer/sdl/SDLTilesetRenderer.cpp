@@ -38,7 +38,7 @@ SDLTilesetRenderer::SDLTilesetRenderer(int screenWidth, int screenHeight, TCODCo
 : TilesetRenderer(screenWidth, screenHeight, mapConsole),
   mapSurface()
 {
-	TCODSystem::registerSDLRenderer(this, translucentUI);
+    TCODSystem::registerSDLRenderer(this/*, translucentUI*/); // FIXME
 	Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	rmask = 0xff000000;
@@ -105,7 +105,7 @@ void SDLTilesetRenderer::DrawNullTile(int screenX, int screenY) {
 
 void SDLTilesetRenderer::SetTranslucentUI(bool translucent) {
 	if (translucent != translucentUI) {
-		TCODSystem::registerSDLRenderer(this, translucent);
+	    TCODSystem::registerSDLRenderer(this/*, translucent*/); // FIXME
 	}
 	translucentUI = translucent;
 }
@@ -126,6 +126,9 @@ namespace {
 		}
 	}
 }
+
+// FIXME
+void SDLTilesetRenderer::render(void *surf) {}
 
 void SDLTilesetRenderer::render(void *surf, void*sdl_screen) {
 	SDL_Surface *tcod = (SDL_Surface *)surf;

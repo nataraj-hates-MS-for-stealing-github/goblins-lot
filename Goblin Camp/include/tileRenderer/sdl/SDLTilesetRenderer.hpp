@@ -30,6 +30,7 @@ public:
 	void DrawSprite(int screenX, int screenY, boost::shared_ptr<TileSetTexture> texture, int tile) const;
 	void DrawSpriteCorner(int screenX, int screenY, boost::shared_ptr<TileSetTexture> texture, int tile, Corner corner) const;
 
+	void render(void *sdlSurface);  // FIXME: inherited a virtual from ITCODSDLRenderer
 	void render(void *sdlSurface, void*sdlScreen);
 
 	void SetTranslucentUI(bool translucent);

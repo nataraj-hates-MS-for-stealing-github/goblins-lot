@@ -25,6 +25,13 @@ struct RawTileData {
 	boost::shared_ptr<TileSetTexture> texture;
 };
 
+// FIXME
+class TCODLIB_API ITCODOGLRenderer {
+public :
+	virtual ~ITCODOGLRenderer() {}
+	virtual void render() = 0;
+};
+
 class OGLTilesetRenderer : public TilesetRenderer, public ITCODOGLRenderer
 {
 public:
