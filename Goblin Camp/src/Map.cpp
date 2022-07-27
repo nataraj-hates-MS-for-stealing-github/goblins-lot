@@ -744,7 +744,7 @@ Coordinate Map::FindRangedAdvantage(const Coordinate& center) {
 }
 
 void Map::UpdateCache() {
-	boost::unique_lock<boost::shared_mutex> writeLock(cacheMutex);
+//	boost::unique_lock<boost::shared_mutex> writeLock(cacheMutex);
 	for (boost::unordered_set<Coordinate>::iterator tilei = changedTiles.begin(); tilei != changedTiles.end();) {
 		cachedTile(*tilei) = tile(*tilei);
 		tilei = changedTiles.erase(tilei);

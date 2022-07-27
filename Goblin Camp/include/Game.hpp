@@ -21,7 +21,7 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include <boost/multi_array.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/thread/mutex.hpp>
+//#include <boost/thread/mutex.hpp>
 
 #include <libtcod.hpp>
 
@@ -120,7 +120,7 @@ public:
 	void Init(bool firstTime);
 	void ResetRenderer();
 	
-	static boost::mutex loadingScreenMutex;
+//	static boost::mutex loadingScreenMutex;
 	static void ProgressScreen(boost::function<void(void)>, bool isLoading);
 	static void LoadingScreen(boost::function<void(void)> fn) {
 		ProgressScreen(fn, true);
