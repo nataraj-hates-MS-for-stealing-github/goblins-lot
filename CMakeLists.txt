@@ -21,16 +21,12 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fsanitize=address -g -O0")
 #SET(CMAKE_CXX_COMPILER "/usr/bin/clang++-11")
 
+SET(FORCE_PYTHON27 FALSE CACHE BOOL "Force python2.7 build" FORCE)
 IF (FORCE_PYTHON27)
   MESSAGE(STATUS "Trying to force python2.7 build")
 ENDIF()
-SET(FORCE_PYTHON27 ${FORCE_PYTHON27} CACHE BOOL "" FORCE)
 
-IF (NOT DEFINED USE_THREADS)
-  SET(USE_THREADS 1) # Default value
-ENDIF()
-SET(USE_THREADS ${USE_THREADS} CACHE BOOL "" FORCE)
-
+SET(USE_THREADS TRUE CACHE BOOL "Enable threads")
 IF (USE_THREADS)
   MESSAGE(STATUS "Using threads")
 ELSE()
@@ -231,15 +227,14 @@ target_sources("goblin-camp" PRIVATE ${main_SRC} ${data_SRC} ${scripting_SRC} ${
 include_directories("goblin-camp" "game/include")
 include_directories("goblin-camp" "vendor/python-modules")
 
-IF (USE_THREADS)
-  target_compile_definitions("goblin-camp" PRIVATE GCAMP_USE_THREADS=1)
-ELSE()
-  target_compile_definitions("goblin-camp" PRIVATE GCAMP_USE_THREADS=0)
-ENDIF()
+# FIXME This is not recomended (see note here: https://cmake.org/cmake/help/latest/command/file.html#filesystem)
+# Better find some other way. For example list them explicitly
+file(GLOB_RECURSE game_headers CONFIGURE_DEPENDS "game/include/*.hpp")
+target_sources("goblin-camp" PRIVATE ${game_headers})
+
+target_compile_definitions("goblin-camp" PRIVATE GCAMP_USE_THREADS=$<BOOL:${USE_THREADS}>)
 target_compile_definitions("goblin-camp" PRIVATE GCAMP_VERSION=\"${GCAMP_VERSION}\")
-IF (GCAMP_VERSION_IS_RELEASE)
-  target_compile_definitions("goblin-camp" PRIVATE GCAMP_VERSION_IS_RELEASE=1)
-ENDIF()
+target_compile_definitions("goblin-camp" PRIVATE GCAMP_VERSION_IS_RELEASE=$<BOOL:${GCAMP_VERSION_IS_RELEASE}>)
 
 IF (${Boost_PYTHON3_FOUND})
   # touch will force install of static python lib
@@ -270,6 +265,9 @@ target_link_libraries("goblin-camp"
   ${OPENGL_LIBRARIES}
   ${libtcod_LIBRARIES}
 )
+
+# Explciitly include header-only Boost libraries for the configuration provider
+target_include_directories("goblin-camp" PRIVATE ${Boost_INCLUDE_DIRS})
 
 IF (USE_THREADS)
   target_link_libraries("goblin-camp"
