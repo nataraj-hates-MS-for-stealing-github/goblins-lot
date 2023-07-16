@@ -1,24 +1,28 @@
-cmake_minimum_required(VERSION 2.8.9) # Do not raise it without a reason. Bump only when you use some feature that is not supported by older verions
+cmake_minimum_required(VERSION 3.1.0) # Do not raise it without a reason. Bump only when you use some feature that is not supported by older verions
 
 # set the project name
 project(GoblinCamp C CXX)
 
+add_executable("goblin-camp")
+
 SET(GCAMP_VERSION "0.24")
 SET(GCAMP_VERSION_IS_RELEASE NO)
 
-SET(CMAKE_CXX_FLAGS "-std=c++17 -DBOOST_NO_CXX11_SCOPED_ENUMS -DBOOST_NO_SCOPED_ENUMS")  # FIXME move to add_compile_options() later
-#  -DBOOST_NO_CXX11_SCOPED_ENUMS -DBOOST_NO_SCOPED_ENUMS  https://stackoverflow.com/questions/18783790/boostfilesystemcopy-file-missing-symbol-in-c11 
+TARGET_COMPILE_FEATURES("goblin-camp" PRIVATE cxx_std_17)
+
+#  -DBOOST_NO_CXX11_SCOPED_ENUMS -DBOOST_NO_SCOPED_ENUMS  https://stackoverflow.com/questions/18783790/boostfilesystemcopy-file-missing-symbol-in-c11
 # and Goblin Camp/src/data/Data.cpp fs::copy_file(source, target);
+TARGET_COMPILE_DEFINITIONS("goblin-camp" PRIVATE "-DBOOST_NO_CXX11_SCOPED_ENUMS -DBOOST_NO_SCOPED_ENUMS")
 
 # Add the path for the script to find libtcod
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-#### Build wiht Address Sanitizer. Uncomment it manually
+#### Build with Address Sanitizer. Uncomment it manually
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fsanitize=address -g -O0")
 #SET(CMAKE_CXX_COMPILER "/usr/bin/clang++-11")
 
 IF (FORCE_PYTHON27)
-  MESSAGE("-- Trying to force python2.7 build")
+  MESSAGE(STATUS "Trying to force python2.7 build")
 ENDIF()
 SET(FORCE_PYTHON27 ${FORCE_PYTHON27} CACHE BOOL "" FORCE)
 
@@ -28,9 +32,9 @@ ENDIF()
 SET(USE_THREADS ${USE_THREADS} CACHE BOOL "" FORCE)
 
 IF (USE_THREADS)
-  MESSAGE("-- Using threads")
+  MESSAGE(STATUS "Using threads")
 ELSE()
-  MESSAGE("-- Using no threads")
+  MESSAGE(STATUS "Using no threads")
 ENDIF()
 
 SET(GOBLIN_CAMP_BINDIR ${CMAKE_INSTALL_PREFIX}/games CACHE PATH "Path to Goblin Camp binary")
@@ -216,7 +220,14 @@ SET (platform_SRC
 "game/src/platform/linux/DataImpl.cpp"
 )
 
-add_executable("goblin-camp" "game/src/platform/unix/main.cpp" "game/src/GCamp.cpp" ${main_SRC} ${data_SRC} ${scripting_SRC} ${libtcod_SRC} ${UI_SRC} ${tileRenderer_SRC} ${platform_SRC})
+# linxu specific code
+target_sources("goblin-camp" PRIVATE
+    "game/src/platform/unix/main.cpp"
+)
+
+target_sources("goblin-camp" PRIVATE ${main_SRC} ${data_SRC} ${scripting_SRC} ${libtcod_SRC} ${UI_SRC} ${tileRenderer_SRC} ${platform_SRC})
+
+
 include_directories("goblin-camp" "game/include")
 include_directories("goblin-camp" "vendor/python-modules")
 

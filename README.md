@@ -56,7 +56,7 @@ If everything went well, you can run the game using `goblin-camp` command.
 #### Useful configuring options
 
 There are several building options that might be useful. You should pass them to `cmake` command
-while prepearing building.
+while preparing building.
 
 `-DFORCE_PYTHON27=YES` -- forces build system to use python27 while building, if it is available.
 
