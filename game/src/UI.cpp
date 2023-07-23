@@ -92,7 +92,7 @@ void UI::HandleKeyboard() {
 
 	//TODO: This isn't pretty, but it works.
 	key = TCODConsole::checkForKeypress(TCOD_KEY_PRESSED);
-	if (!currentMenu || !(currentMenu->Update(-1, -1, false, key) & KEYRESPOND)) {
+	if (key.vk != TCODK_NONE && (!currentMenu || !(currentMenu->Update(-1, -1, false, key) & KEYRESPOND))) {
 		if (!textMode) {
 			if (key.c == keyMap["Exit"]) {
 				Game::Exit();
