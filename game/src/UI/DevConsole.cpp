@@ -52,17 +52,18 @@ struct DevConsole {
 	PyCompilerFlags cf;
 	PyObject *newStdOut, *newStdIn;
 	PyObject *oldStdOut, *oldStdErr, *oldStdIn;
-	
+
 	DevConsole(unsigned width) : inputID(0), input(""), output(""), canvas(TCODConsole(width - 2, 256)) {
 		output.reserve(2048);
 		input.reserve(256);
 		canvas.clear();
-		
+
 		cf.cf_flags = (CO_FUTURE_DIVISION | CO_FUTURE_ABSOLUTE_IMPORT | CO_FUTURE_PRINT_FUNCTION);
-		
-		PycString_IMPORT;
-		newStdIn  = PycStringIO->NewInput(PyUnicode_FromString(""));
-		
+
+		auto python_io = PyImport_ImportModule("io");
+		auto io_StringIO = PyObject_GetAttrString(python_io, "StringIO");
+		newStdIn = PyObject_CallObject(io_StringIO, 0);
+
 		/* const_cast are workarounds against the fact that PySys_{Get,Set}Object expects
 		   a char * instead of const char *
 		   see: http://mail.python.org/pipermail/python-dev/2011-February/108140.html
@@ -71,25 +72,27 @@ struct DevConsole {
 		oldStdErr = PySys_GetObject(const_cast<char *>("stderr"));
 		oldStdIn  = PySys_GetObject(const_cast<char *>("stdin"));
 	}
-	
+
 	std::string GetStreamValue() {
-		PyObject *str = PycStringIO->cgetvalue(newStdOut);
-		return std::string(py::extract<char*>(py::object(py::handle<>(str))));
+		PyObject *str = PyObject_CallMethod(newStdOut, const_cast<char *>("getvalue"), NULL);
+		return std::string(PyUnicode_AsUTF8(str));
 	}
-	
+
 	void RedirectStreams() {
-		newStdOut = PycStringIO->NewOutput(2048);
-		
+		auto python_io = PyImport_ImportModule("io");
+		auto io_StringIO = PyObject_GetAttrString(python_io, "StringIO");
+		newStdOut = PyObject_CallObject(io_StringIO, 0);
+
 		PySys_SetObject(const_cast<char *>("stdout"), newStdOut);
 		PySys_SetObject(const_cast<char *>("stderr"), newStdOut);
 		PySys_SetObject(const_cast<char *>("stdin"),  newStdIn);
 	}
-	
+
 	void RestoreStreams() {
 		PySys_SetObject(const_cast<char *>("stdout"), oldStdOut);
 		PySys_SetObject(const_cast<char *>("stderr"), oldStdErr);
 		PySys_SetObject(const_cast<char *>("stdin"),  oldStdIn);
-		
+
 		Py_DECREF(newStdOut);
 	}
 	
