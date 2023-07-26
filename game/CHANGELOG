@@ -2,7 +2,8 @@ Goblin Camp Changelog
 
 -- version 0.24 (future release) --
 * Improve key press efficiency when no key is pressed (c1183040)
-* Fix Dev Console to work with python3 ()
+* Fix Dev Console to work with python3 (47c8a74b)
+* Drop python2.7 support ()
 
 -- version 0.23 (2023-07-09) --
 

@@ -41,14 +41,12 @@ namespace py = boost::python;
 // | >>> input                                      |
 // +------------------------------------------------+
 
-#include <cStringIO.h>
-
 struct DevConsole {
 	unsigned inputID;
 	std::string input;
 	std::string output;
 	TCODConsole canvas;
-	
+
 	PyCompilerFlags cf;
 	PyObject *newStdOut, *newStdIn;
 	PyObject *oldStdOut, *oldStdErr, *oldStdIn;
@@ -60,16 +58,12 @@ struct DevConsole {
 
 		cf.cf_flags = (CO_FUTURE_DIVISION | CO_FUTURE_ABSOLUTE_IMPORT | CO_FUTURE_PRINT_FUNCTION);
 
-#if PY_MAJOR_VERSION >= 3
 		auto python_io = PyImport_ImportModule("io");
 		auto io_StringIO = PyObject_GetAttrString(python_io, "StringIO");
 		newStdIn = PyObject_CallObject(io_StringIO, 0);
 		Py_DECREF(io_StringIO);
 		Py_DECREF(python_io);
-#else
-		PycString_IMPORT;
-		newStdIn  = PycStringIO->NewInput(PyUnicode_FromString(""));
-#endif
+
 		/* const_cast are workarounds against the fact that PySys_{Get,Set}Object expects
 		   a char * instead of const char *
 		   see: http://mail.python.org/pipermail/python-dev/2011-February/108140.html
@@ -79,36 +73,26 @@ struct DevConsole {
 		oldStdIn  = PySys_GetObject(const_cast<char *>("stdin"));
 	}
 	~DevConsole() {
-#if PY_MAJOR_VERSION >= 3
 		PySys_SetObject(const_cast<char *>("stdin"),  oldStdIn); /* Just in case we are in the middle of the IO */
 		PySys_SetObject(const_cast<char *>("stdout"), oldStdOut);
 		PySys_SetObject(const_cast<char *>("stderr"), oldStdErr);
 		Py_DECREF(newStdIn);
-#endif
 	}
 
 	std::string GetStreamValue() {
-#if PY_MAJOR_VERSION >= 3
 		PyObject *str = PyObject_CallMethod(newStdOut, const_cast<char *>("getvalue"), NULL);
 		auto res = std::string(PyUnicode_AsUTF8(str));
 		Py_DECREF(str);
 		return res;
-#else
-		PyObject *str = PycStringIO->cgetvalue(newStdOut);
-		return std::string(py::extract<char*>(py::object(py::handle<>(str))));
-#endif
 	}
 
 	void RedirectStreams() {
-#if PY_MAJOR_VERSION >= 3
 		auto python_io = PyImport_ImportModule("io");
 		auto io_StringIO = PyObject_GetAttrString(python_io, "StringIO");
 		newStdOut = PyObject_CallObject(io_StringIO, 0);
 		Py_DECREF(io_StringIO);
 		Py_DECREF(python_io);
-#else
-		newStdOut = PycStringIO->NewOutput(2048);
-#endif
+
 		PySys_SetObject(const_cast<char *>("stdout"), newStdOut);
 		PySys_SetObject(const_cast<char *>("stderr"), newStdOut);
 		PySys_SetObject(const_cast<char *>("stdin"),  newStdIn);
@@ -174,14 +158,10 @@ struct DevConsole {
 			if (co == NULL) {
 				py::throw_error_already_set();
 			}
-			
+
 			py::object ns = py::import("__gcdevconsole__").attr("__dict__");
-#if PY_MAJOR_VERSION >= 3
 			PyObject *ret = PyEval_EvalCode((PyObject*)co, ns.ptr(), ns.ptr());
-#else
-			PyObject *ret = PyEval_EvalCode(co, ns.ptr(), ns.ptr());
-#endif
-			
+
 			if (ret == NULL) {
 				Py_DECREF(co);
 				py::throw_error_already_set();

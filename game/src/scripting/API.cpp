@@ -60,15 +60,10 @@ namespace Script { namespace API {
 
 namespace Script {
 	void ExposeAPI() {
-#if PY_MAJOR_VERSION >= 3
 		PyImport_AppendInittab((char*) "_gcampapi", Script::API::PyInit__gcampapi);
 		PyImport_AppendInittab((char*) "_gcampconfig", Script::API::PyInit__gcampconfig);
-#else
-		PyImport_AppendInittab((char*) "_gcampapi",    Script::API::init_gcampapi);
-		PyImport_AppendInittab((char*) "_gcampconfig", Script::API::init_gcampconfig);
-#endif
 	}
-	
+
 	void AppendListener(PyObject *listener) {
 		assert(listener);
 		py::handle<> hListener(py::borrowed(listener));
