@@ -18,13 +18,13 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #pragma once
 
 #include <list>
+#if GCAMP_USE_THREADS
+#include <mutex>
+#endif
 
 #include <boost/multi_array.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#if GCAMP_USE_THREADS
-#include <boost/thread/mutex.hpp>
-#endif
 
 #include <libtcod.hpp>
 
@@ -123,7 +123,7 @@ public:
 	void Init(bool firstTime);
 	void ResetRenderer(int width=-1, int height=-1);
 #if GCAMP_USE_THREADS
-	static boost::mutex loadingScreenMutex;
+	static std::mutex loadingScreenMutex;
 #endif
 	static void ProgressScreen(boost::function<void(void)>, bool isLoading);
 	static void LoadingScreen(boost::function<void(void)> fn) {

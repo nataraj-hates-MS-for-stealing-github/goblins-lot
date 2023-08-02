@@ -79,9 +79,6 @@ typedef unsigned char uint8;
 #	endif
 #		include <boost/python/detail/wrap_python.hpp>
 #		include <boost/python.hpp>
-#if GCAMP_USE_THREADS
-#		include <boost/thread/thread.hpp>
-#endif
 #		include <boost/multi_array.hpp>
 #		include <boost/shared_ptr.hpp>
 #		include <boost/weak_ptr.hpp>

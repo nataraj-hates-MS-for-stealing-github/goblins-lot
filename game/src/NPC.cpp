@@ -18,10 +18,11 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include <cstdlib>
 #include <string>
-#include <boost/serialization/split_member.hpp>
 #if GCAMP_USE_THREADS
-#include <boost/thread/thread.hpp>
+#include <thread>
 #endif
+
+#include <boost/serialization/split_member.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
@@ -1452,7 +1453,7 @@ TaskResult NPC::Move(TaskResult oldResult) {
 	while (nextMove > 100) {
 		nextMove -= 100;
 #if GCAMP_USE_THREADS
-		boost::mutex::scoped_try_lock pathLock(pathMutex);
+		std::unique_lock pathLock(pathMutex, std::try_to_lock);
 		if (pathLock.owns_lock())
 #endif
 		{
@@ -1496,7 +1497,7 @@ TaskResult NPC::Move(TaskResult oldResult) {
 
 #if GCAMP_USE_THREADS
 unsigned int NPC::pathingThreadCount = 0;
-boost::mutex NPC::threadCountMutex;
+std::mutex NPC::threadCountMutex;
 #endif
 
 void NPC::findPath(Coordinate target) {
@@ -1516,7 +1517,8 @@ void NPC::findPath(Coordinate target) {
 		++pathingThreadCount;
 		threadCountMutex.unlock();
 		pathMutex.unlock();
-		boost::thread pathThread(boost::bind(tFindPath, path, pos.X(), pos.Y(), target.X(), target.Y(), this, true));
+		std::thread pathThread(boost::bind(tFindPath, path, pos.X(), pos.Y(), target.X(), target.Y(), this, true));
+		pathThread.detach();
 	} else {
 		threadCountMutex.unlock();
 		pathMutex.unlock();
@@ -1640,8 +1642,8 @@ boost::weak_ptr<Entity> NPC::currentEntity() const {
 
 void tFindPath(TCODPath *path, int x0, int y0, int x1, int y1, NPC* npc, bool threaded) {
 #if GCAMP_USE_THREADS
-	boost::mutex::scoped_lock pathLock(npc->pathMutex);
-	boost::shared_lock<boost::shared_mutex> readCacheLock(npc->map->cacheMutex);
+	std::unique_lock pathLock(npc->pathMutex);
+	std::shared_lock readCacheLock(npc->map->cacheMutex);
 #endif
 	npc->nopath = !path->compute(x0, y0, x1, y1);
 

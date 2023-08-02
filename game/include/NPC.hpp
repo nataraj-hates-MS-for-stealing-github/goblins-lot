@@ -18,10 +18,10 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include <queue>
 #include <list>
-
 #if GCAMP_USE_THREADS
-#include <boost/thread/thread.hpp>
+#include <mutex>
 #endif
+
 #include <boost/multi_array.hpp>
 #include <boost/function.hpp>
 #include <boost/weak_ptr.hpp>
@@ -123,7 +123,7 @@ class NPC : public Entity {
 	int orderIndex;
 
 #if GCAMP_USE_THREADS
-	boost::mutex pathMutex;
+	std::mutex pathMutex;
 #endif
 	TCODPath *path;
 	int pathIndex;
@@ -297,7 +297,7 @@ public:
 
 #if GCAMP_USE_THREADS
 	static unsigned int pathingThreadCount;
-	static boost::mutex threadCountMutex;
+	static std::mutex threadCountMutex;
 #endif
 	void AddTrait(Trait);
 	void RemoveTrait(Trait);

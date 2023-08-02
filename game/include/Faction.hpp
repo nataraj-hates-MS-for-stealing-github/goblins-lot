@@ -21,11 +21,12 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include <vector>
 #include <string>
 
+#if GCAMP_USE_THREADS
+#include <shared_mutex>
+#endif
+
 #include <boost/shared_ptr.hpp>
 
-#if GCAMP_USE_THREADS
-#include <boost/thread/shared_mutex.hpp>
-#endif
 
 #include <boost/weak_ptr.hpp>
 
@@ -62,7 +63,7 @@ class Faction {
 	std::string name;
 	int index;
 #if GCAMP_USE_THREADS
-	boost::shared_mutex trapVisibleMutex;
+	std::shared_mutex trapVisibleMutex;
 #endif
 	std::vector<boost::weak_ptr<Job> > jobs;
 	std::vector<FactionGoal> goals;

@@ -3,7 +3,9 @@ Goblin Camp Changelog
 -- version 0.24 (future release) --
 * Improve key press efficiency when no key is pressed (c1183040)
 * Fix Dev Console to work with python3 (47c8a74b)
-* Drop python2.7 support ()
+* Drop python2.7 support (20678014)
+* Import boost::thread -> std::thread patch from goblin-camp-legacy written
+  by CatPlusPlus (c51c7fe1 -> ) 
 
 -- version 0.23 (2023-07-09) --
 

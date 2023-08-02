@@ -21,15 +21,18 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include <cassert>
 #endif
 
+#if GCAMP_USE_THREADS
+#include <thread>
+#include <future>
+#include <chrono>
+#endif
+
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/set.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/weak_ptr.hpp>
 #include <boost/serialization/vector.hpp>
-#if GCAMP_USE_THREADS
-#include <boost/thread.hpp>
-#endif
 #include <boost/date_time/posix_time/posix_time_duration.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/python/detail/wrap_python.hpp>
@@ -501,8 +504,8 @@ namespace {
 	
 	void DrawProgressScreen(int x, int y, int spin, bool isLoading) {
 #if GCAMP_USE_THREADS
-		boost::lock_guard<boost::mutex> lock(Game::loadingScreenMutex);
-		
+		std::unique_lock lock(Game::loadingScreenMutex);
+
 		SDL_PumpEvents();
 		
 		std::string loadingMsg = (isLoading ? loading : saving)[spin % (isLoading ? loadingSize : savingSize)];
@@ -518,7 +521,7 @@ namespace {
 }
 
 #if GCAMP_USE_THREADS
-boost::mutex Game::loadingScreenMutex;
+std::mutex Game::loadingScreenMutex;
 #endif
 
 void Game::ProgressScreen(boost::function<void(void)> blockingCall, bool isLoading) {
@@ -530,34 +533,38 @@ void Game::ProgressScreen(boost::function<void(void)> blockingCall, bool isLoadi
 	//
 	// XXX heavily experimental
 #if GCAMP_USE_THREADS
-	boost::promise<void> promise;
-	boost::unique_future<void> future(promise.get_future());
-	
+	std::promise<void> promise;
+	std::future<void> future(promise.get_future());
+
 	// make copies before launching the thread
 	int x = Game::Inst()->screenWidth  / 2;
 	int y = Game::Inst()->screenHeight / 2;
 	
 	DrawProgressScreen(x, y, 0, isLoading);
-	
-	boost::thread thread([&]() {
+
+	std::thread thread([&]() {
 		try {
 #endif
 			blockingCall();
 #if GCAMP_USE_THREADS
 			promise.set_value();
-		} catch (const std::exception& e) {
-			promise.set_exception(boost::copy_exception(e));
+		} catch (const std::exception&) {
+			promise.set_exception(std::current_exception());
 		}
 	});
-	
+
+	thread.detach();
+
 	int spin = 0;
-	do {
+
+	while (true) {
+		auto status = future.wait_for(std::chrono::milliseconds(500));
+		if (status == std::future_status::ready) {
+			break;
+		}
 		DrawProgressScreen(x, y, ++spin, isLoading);
-	} while (!future.timed_wait(boost::posix_time::millisec(500)));
-	
-	if (future.has_exception()) {
-		future.get();
 	}
+	future.get();
 #endif
 }
 
@@ -565,8 +572,8 @@ void Game::ProgressScreen(boost::function<void(void)> blockingCall, bool isLoadi
 
 void Game::ErrorScreen() {
 #if GCAMP_USE_THREADS
-	boost::lock_guard<boost::mutex> lock(loadingScreenMutex);
-	
+	std::unique_lock lock(loadingScreenMutex);
+
 	Game *game = Game::Inst();
 	TCODConsole::root->setDefaultForeground(GCampColor::white);
 	TCODConsole::root->setDefaultBackground(GCampColor::black);

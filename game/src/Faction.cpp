@@ -83,7 +83,7 @@ void Faction::RemoveMember(boost::weak_ptr<NPC> member) {
 
 void Faction::TrapDiscovered(Coordinate trapLocation, bool propagate) {
 #if GCAMP_USE_THREADS
-	boost::unique_lock<boost::shared_mutex> writeLock(trapVisibleMutex);
+	std::unique_lock writeLock{trapVisibleMutex};
 #endif
 	trapVisible[trapLocation] = true;
 	//Inform friends
@@ -96,7 +96,7 @@ void Faction::TrapDiscovered(Coordinate trapLocation, bool propagate) {
 
 bool Faction::IsTrapVisible(Coordinate trapLocation) {
 #if GCAMP_USE_THREADS
-	boost::shared_lock<boost::shared_mutex> readLock(trapVisibleMutex);
+	std::shared_lock readLock(trapVisibleMutex);
 #endif
 	std::map<Coordinate, bool>::iterator trapi = trapVisible.find(trapLocation);
 	if (trapi == trapVisible.end()) return false;
@@ -105,7 +105,7 @@ bool Faction::IsTrapVisible(Coordinate trapLocation) {
 
 void Faction::TrapSet(Coordinate trapLocation, bool visible) {
 #if GCAMP_USE_THREADS
-	boost::unique_lock<boost::shared_mutex> writeLock(trapVisibleMutex);
+	std::unique_lock writeLock{trapVisibleMutex};
 #endif
 	trapVisible[trapLocation] = visible;
 }
@@ -134,7 +134,7 @@ std::string Faction::FactionTypeToString(FactionType faction) {
 //remain constant
 void Faction::Reset() {
 #if GCAMP_USE_THREADS
-	boost::unique_lock<boost::shared_mutex> writeLock(trapVisibleMutex);
+	std::unique_lock writeLock(trapVisibleMutex);
 #endif
 	members.clear();
 	membersAsUids.clear();

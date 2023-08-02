@@ -32,11 +32,6 @@ SET(GOBLIN_CAMP_BINDIR ${CMAKE_INSTALL_PREFIX}/games CACHE PATH "Path to Goblin 
 SET(GOBLIN_CAMP_DATA_BASE_DIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH "Base Data Dir Path")
 SET(GOBLIN_CAMP_SHAREDIR "${GOBLIN_CAMP_DATA_BASE_DIR}/games/goblin-camp" CACHE PATH "Path to Goblin Camp shared files")
 
-find_package(Boost REQUIRED)
-IF (USE_THREADS OR ( ${Boost_VERSION} LESS 106701) ) # for boost 1.67 we have to find threads anyway for some reason
-  find_package(Boost REQUIRED COMPONENTS thread)
-ENDIF()
-
 find_package(Boost REQUIRED COMPONENTS system filesystem serialization iostreams)
 find_package(Boost COMPONENTS python REQUIRED)
 
@@ -207,10 +202,6 @@ target_link_libraries("goblin-camp"
 
 # Explciitly include header-only Boost libraries for the configuration provider
 target_include_directories("goblin-camp" PRIVATE ${Boost_INCLUDE_DIRS})
-
-IF (USE_THREADS)
-  target_link_libraries("goblin-camp" ${Boost_THREAD_LIBRARY})
-ENDIF()
 
 target_link_libraries("goblin-camp" ${Boost_PYTHON3_LIBRARY})
 
