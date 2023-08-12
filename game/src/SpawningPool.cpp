@@ -66,15 +66,12 @@ void SpawningPool::ToggleDumpCorpses(SpawningPool* sp) { sp->dumpCorpses = !sp->
 
 Coordinate SpawningPool::SpawnLocation()
 {
-	Direction dirs[4] = { WEST, EAST, NORTH, SOUTH };
-	std::random_device rd;
-	std::minstd_rand rnd_generator(rd());
-	std::shuffle(dirs, dirs + 4, rnd_generator); //shuffle to avoid predictability
+	std::array<Direction, 4> dirs = Random::GetShuffledDirections();
 
 	for (int x = a.X(); x <= b.X(); ++x) {
 		for (int y = a.Y(); y <= b.Y(); ++y) {
 			Coordinate p(x,y);
-			if (map->GetConstruction(p) == uid) {				
+			if (map->GetConstruction(p) == uid) {
 				for (int i = 0; i < 4; ++i) {
 					Coordinate candidate = p + Coordinate::DirectionToCoordinate(dirs[i]);
 					if (map->IsWalkable(candidate))
@@ -188,10 +185,7 @@ void SpawningPool::Update() {
 }
 
 void SpawningPool::Expand(bool message) {
-	Direction dirs[4] = { WEST, EAST, NORTH, SOUTH };
-	std::random_device rd;
-	std::minstd_rand rnd_generator(rd());
-	std::shuffle(dirs, dirs + 4, rnd_generator); //shuffle to avoid predictability
+	std::array<Direction, 4> dirs = Random::GetShuffledDirections();
 	Coordinate location = undefined;
 	for (int i = 0; location == undefined && i < 10; ++i) {
 		Coordinate candidate = Random::ChooseInRectangle(a-1, b+1);

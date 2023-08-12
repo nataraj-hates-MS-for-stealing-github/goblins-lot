@@ -15,6 +15,9 @@ You should have received a copy of the GNU General Public License
 along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #pragma once
 
+#include <array>
+#include <random>
+
 #include <boost/random.hpp>
 #include <libtcod.hpp>
 #include <Coordinate.hpp>
@@ -86,4 +89,12 @@ namespace Random {
 	Coordinate ChooseInRadius(const Coordinate& center, const int radius);
 	Coordinate ChooseInRadius(int radius);
 	Coordinate ChooseInRectangle(const Coordinate& low, const Coordinate& high);
+
+	inline std::array<Direction, 4> GetShuffledDirections(){
+		std::array<Direction, 4> dirs = {WEST, EAST, NORTH, SOUTH};
+		std::random_device rd;
+		std::minstd_rand rnd_generator(rd());
+		std::shuffle(dirs.begin(), dirs.end(), rnd_generator); // shuffle to avoid predictability
+		return dirs;
+	}
 }

@@ -1,11 +1,20 @@
 Goblin Camp Changelog
 
 -- version 0.24 (future release) --
-* Improve key press efficiency when no key is pressed (c1183040)
-* Fix Dev Console to work with python3 (47c8a74b)
-* Drop python2.7 support (20678014)
-* Import boost::thread -> std::thread patch from goblin-camp-legacy written
-  by CatPlusPlus (c51c7fe1 -> ) 
+
+* Engine changes:
+  - Fix Dev Console to work with python3 (47c8a74b)
+  - Drop python2.7 support (20678014)
+
+* Internal changes:
+  - Imporove cmake build files (78e83a1f, 645e250f)
+  - Improvements for future windows build by HexDecimal1 (ec1fae23, b06e32a7, 7a608487, d34df550, d3489f77)
+  - Do not use threads when threads are disabled (ee1dbac7)
+  - Improve key press efficiency when no key is pressed (c1183040)
+  - Import boost::thread -> std::thread patch from goblin-camp-legacy written
+    by CatPlusPlus (c51c7fe1 -> 0d2930ef)
+  - Do `GetShuffledDirections` same way as CatPlusPlus did in 3078cba1
+    but with HexDecimal1's implementation inside (bd8c26c3, )
 
 -- version 0.23 (2023-07-09) --
 
