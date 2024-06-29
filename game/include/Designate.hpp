@@ -36,7 +36,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class Designate {
 	GC_SERIALIZABLE_CLASS
-	
+	char blueprit_char = '?';
 public:
 	virtual void Draw(TCODConsole* console, Coordinate pos, Coordinate upleft);
 };
