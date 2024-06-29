@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-             2020-2022 Nikolay Shaplov (aka dhyan.nataraj)
+             2020-2024 Nikolay Shaplov (aka dhyan.nataraj)
 This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "Weather.hpp"
 #include "GCamp.hpp"
 #include "Color.hpp"
+#include "Blueprint.hpp"
 
 static const int HARDCODED_WIDTH = 500;
 static const int HARDCODED_HEIGHT = 500;

@@ -69,6 +69,7 @@ SET (main_SRC
 "game/src/Announce.cpp"
 "game/src/Attack.cpp"
 "game/src/Blood.cpp"
+"game/src/Blueprint.cpp"
 "game/src/Camp.cpp"
 "game/src/Construction.cpp"
 "game/src/Container.cpp"
