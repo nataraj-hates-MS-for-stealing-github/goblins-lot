@@ -423,6 +423,10 @@ void UI::HandleMouse() {
 		if (!menuOpen || _state != UI_NORMAL) {
 			CloseMenu();
 		}
+		/* Cancel designation mode if we ever have one */
+		if (Game::Inst()->tmp_designate)
+			Game::Inst()->tmp_designate.reset();
+
 		currentMenu = 0;
 		if(!underCursor.empty()) {
 			if (underCursor.begin()->lock()) {
@@ -704,6 +708,7 @@ void UI::ChooseConstruct(ConstructionType construct, UIState state) {
 	UI::Inst()->blueprint(Construction::Blueprint(construct));
 	UI::Inst()->state(state);
 	Game::Inst()->Renderer()->SetCursorMode(Cursor_Construct);
+	Game::Inst()->tmp_designate = std::make_shared<Designate>();
 	UI::Inst()->HideMenu();
 	UI::Inst()->SetExtraTooltip(Construction::Presets[construct].name);
 }

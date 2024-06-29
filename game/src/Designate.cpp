@@ -60,7 +60,7 @@ void Designate::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft)
 				  fg = GCampColor::red;
 				}
 			}
-			console->putCharEx(x, y, 'G', fg, bg );
+			console->putCharEx(x, y, blueprit_char, fg, bg );
 		}
 	}
 }

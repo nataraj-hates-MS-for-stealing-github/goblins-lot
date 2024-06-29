@@ -106,7 +106,6 @@ screenWidth(0),
 	for(int i = 0; i < 12; i++) {
 		marks[i] = undefined;
 	}
-	tmp_designate = std::make_shared<Designate>();
 }
 
 Game::~Game() {
