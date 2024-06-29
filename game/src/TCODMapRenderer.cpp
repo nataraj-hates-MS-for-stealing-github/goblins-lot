@@ -215,6 +215,7 @@ void TCODMapRenderer::SetCursorMode(int other) {
 }
 
 void TCODMapRenderer::DrawCursor(const Coordinate& start, const Coordinate& end, bool placeable) {
+/*
 	for (int x = std::max(0, start.X() - upleft.X()); x <= std::min(console->getWidth() - 1, end.X() - upleft.X()); ++x)
 	{
 		for (int y = std::max(0, start.Y() - upleft.Y()); y <= std::min(console->getHeight() - 1, end.Y() - upleft.Y()); ++y)
@@ -223,6 +224,7 @@ void TCODMapRenderer::DrawCursor(const Coordinate& start, const Coordinate& end,
 			else console->putCharEx(x, y, cursorChar, GCampColor::green, GCampColor::black);
 		}
 	}
+*/
 	Game::Inst()->tmp_designate->Draw(console, start, upleft);
 }
 
@@ -233,8 +235,8 @@ void TCODMapRenderer::DrawCursor(const Coordinate& pos, bool placeable) {
 		if (!placeable) console->putCharEx(pos.X() - upleft.X(),pos.Y() - upleft.Y(), cursorChar, GCampColor::red, GCampColor::black);
 		else console->putCharEx(pos.X() - upleft.X(), pos.Y() - upleft.Y(), cursorChar, GCampColor::green, GCampColor::black);
 	}
-	Game::Inst()->tmp_designate->Draw(console, pos, upleft);
 }
+
 
 void TCODMapRenderer::SetTranslucentUI(bool) {}
 

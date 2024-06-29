@@ -28,12 +28,40 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "stdafx.hpp"
 
+#include "Game.hpp"
 #include "Designate.hpp"
 #include "Color.hpp"
 
-void Designate:: Draw(TCODConsole* console, Coordinate pos, Coordinate upleft)
+void Designate::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft)
 {
-	console->putCharEx(pos.X() - upleft.X(), pos.Y() - upleft.Y(), 'G', GCampColor::white, GCampColor::black);
+	TCOD_ColorRGB fg = GCampColor::green;
+	TCOD_ColorRGB bg = GCampColor::black;
+	auto g = Game::Inst();
+	int width = 3;
+	int height = 3;
 
+	bool placeable;
+
+	placeable = g->CheckPlacement(pos,{height,width}, std::set<TileType>());
+
+	for(int i=0; i < width; i++)
+	{
+		for (int j=0; j < height; j++)
+		{
+			int x = pos.X() - upleft.X() + i;
+			int y = pos.Y() - upleft.Y() + j;
+			if (! placeable)
+			{
+				if (g->CheckPlacement({pos.X()+i,pos.Y()+j},{1,1}, std::set<TileType>()))
+				{
+				  fg = GCampColor::yellow;
+				} else
+				{
+				  fg = GCampColor::red;
+				}
+			}
+			console->putCharEx(x, y, 'G', fg, bg );
+		}
+	}
 }
 
