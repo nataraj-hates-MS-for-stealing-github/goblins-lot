@@ -40,7 +40,6 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "Weather.hpp"
 #include "GCamp.hpp"
 #include "Color.hpp"
-#include "Blueprint.hpp"
 
 static const int HARDCODED_WIDTH = 500;
 static const int HARDCODED_HEIGHT = 500;
