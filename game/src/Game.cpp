@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-             2020-2023 Nikolay Shaplov (aka dhyan.nataraj)
+             2020-2024 Nikolay Shaplov (aka dhyan.nataraj)
 This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
@@ -106,6 +106,7 @@ screenWidth(0),
 	for(int i = 0; i < 12; i++) {
 		marks[i] = undefined;
 	}
+	tmp_designate = std::make_shared<Designate>();
 }
 
 Game::~Game() {

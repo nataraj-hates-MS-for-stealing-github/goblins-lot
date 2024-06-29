@@ -223,6 +223,7 @@ void TCODMapRenderer::DrawCursor(const Coordinate& start, const Coordinate& end,
 			else console->putCharEx(x, y, cursorChar, GCampColor::green, GCampColor::black);
 		}
 	}
+	Game::Inst()->tmp_designate->Draw(console, start, upleft);
 }
 
 void TCODMapRenderer::DrawCursor(const Coordinate& pos, bool placeable) {
@@ -232,6 +233,7 @@ void TCODMapRenderer::DrawCursor(const Coordinate& pos, bool placeable) {
 		if (!placeable) console->putCharEx(pos.X() - upleft.X(),pos.Y() - upleft.Y(), cursorChar, GCampColor::red, GCampColor::black);
 		else console->putCharEx(pos.X() - upleft.X(), pos.Y() - upleft.Y(), cursorChar, GCampColor::green, GCampColor::black);
 	}
+	Game::Inst()->tmp_designate->Draw(console, pos, upleft);
 }
 
 void TCODMapRenderer::SetTranslucentUI(bool) {}

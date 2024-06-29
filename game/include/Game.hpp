@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-             2020-2023 Nikolay Shaplov (aka dhyan.nataraj)
+             2020-2024 Nikolay Shaplov (aka dhyan.nataraj)
 This file is part of Goblin Camp.
 
 Goblin Camp is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "Fire.hpp"
 #include "Spell.hpp"
 #include "GCamp.hpp"
+#include "Designate.hpp"
 
 #include "MapRenderer.hpp"
 #include "data/Serialization.hpp"
@@ -283,6 +284,8 @@ public:
 
 	void DisplayStats();
 	void ProvideMap();
+
+	std::shared_ptr<Designate> tmp_designate; // Just for experements for now
 };
 
 BOOST_CLASS_VERSION(Game, 1)
