@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-             2020-2024 Nikolay Shaplov (aka dhyan.nataraj)
+             2020-2022 Nikolay Shaplov (aka dhyan.nataraj)
 This file is part of Goblin Camp.
 
 Goblin Camp is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "Tile.hpp"
 #include "Coordinate.hpp"
-#include "Blueprint.hpp"
 #include "data/Serialization.hpp"
 
 class MapMarker;
@@ -66,8 +65,6 @@ class Map : public ITCODPathCallback {
 	
 public:
 	typedef std::list<std::pair<unsigned int, MapMarker> >::const_iterator MarkerIterator;
-
-	std::shared_ptr<Blueprint> tmp_blueprint; // Just for experements for now 
 
 	TCODHeightMap *heightMap;
 	static Map* Inst();
