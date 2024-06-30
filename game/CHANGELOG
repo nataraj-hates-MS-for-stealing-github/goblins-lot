@@ -7,7 +7,8 @@ Goblin Camp Changelog
   - Drop python2.7 support (20678014)
 
 * Bug fixes:
-  - Fix opening sidebar while trying to place building over obstacle ()
+  - Fix opening sidebar while trying to place building over obstacle (cd5ba936)
+  - Fix tooltip blinking while canceling construction placement ()
 
 * Internal changes:
   - Imporove cmake build files (78e83a1f, 645e250f)

@@ -440,6 +440,9 @@ void UI::HandleMouse() {
 		if (menuOpen) currentMenu->Open();
 		menuHistory.clear();
 		extraTooltip = "";
+
+		/* Make sure uderCursor list does not have any remnants to prevent tooltip blinking */
+		underCursor.clear();
 	}
 
 	if (mbuttonPressed && menuOpen && !menuHistory.empty()) {
