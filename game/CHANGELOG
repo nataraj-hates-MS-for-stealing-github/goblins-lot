@@ -1,10 +1,10 @@
 Goblins' Lot Changelog
 
--- version 0.24 (future release) --
+-- version 0.24 (2024-06-30) --
 
 * Essential changes:
   - Game renamed to "Goblins' Lot", since Ilkka Halila decided to reuse
-    "Goblin Camp" name for another project of his ()
+    "Goblin Camp" name for another project of his (a519debc, 82a8bec7)
 
 * Engine changes:
   - Fix Dev Console to work with python3 (47c8a74b)

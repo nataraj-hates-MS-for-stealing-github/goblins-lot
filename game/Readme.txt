@@ -92,7 +92,7 @@ Goblin Camp crash reporter tool uses SharpZipLib, which is GPL licensed (refer t
 
 Copyright 2010-2011 Ilkka Halila (aka Generic Container), gencontain@gmail.com; Twitter: ihalila
 
-Copyright 2020-2022 Nikolay Shaplov (aka dhyan.nataraj), dhyan@nataraj.su; Matrix: @dhyan:nataraj.su
+Copyright 2020-2024 Nikolay Shaplov (aka dhyan.nataraj), dhyan@nataraj.su; Matrix: @dhyan:nataraj.su
 
 
 
