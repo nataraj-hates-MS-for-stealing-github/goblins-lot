@@ -1,11 +1,23 @@
-# Goblin Camp
+# Goblis' Lot
 
-Goblin Camp aims to be a roguelike city builder with an emphasis on
+Goblins' Lot, aims to be a roguelike city builder with an emphasis on
 macromanaging the economy and military. I've drawn inspiration from games
 such as Anno 1404, Dwarf Fortress and Dungeon Keeper.
 
-Game have been originaly created by Ilkka Halila (aka  Generic Container) in
-2010-2011 and brought back to live by Nikolay Shaplov in 2020-2022
+## Game history
+
+Goblins' Lot was originally created under the name Goblin Camp by Ilkka Halila
+(aka Generic Container) back in 2010-2011, and released it as Free Software.
+
+In 2020 Nikolay Shaplov brought Goblin Camp back to life. Game needed some
+fixing to run on modern OS.
+
+In 2024 Ilkka Halila reused name "Goblin Camp" for a new non-free project of his.
+So original free Goblin Camp have been renamed to "Goblins' Lot" to avid name
+collision.
+
+Goblins' Lot is maintained by Nikolay Shaplov, and gets occasional fixes
+and improvements.
 
 ## Gameplay
 
@@ -58,14 +70,11 @@ If everything went well, you can run the game using `goblin-camp` command.
 There are several building options that might be useful. You should pass them to `cmake` command
 while preparing building.
 
-`-DFORCE_PYTHON27=YES` -- forces build system to use python27 while building, if it is available.
-
 `-DUSE_THREADS=NO` -- disables thread usage in Goblin Camp. Might be useful while debugging.
-
 
 # Obtaining code, reporting and contributing
 
-You can obtain latest game code at https://gitlab.com/dhyannataraj/goblin-camp, there you can also
+You can obtain latest game code at https://gitlab.com/dhyannataraj/goblis-lot, there you can also
 report bugs and file merge requests.
 
 # License and author information
@@ -76,4 +85,4 @@ Game code is licensed under GNU/GPL v.3 or later. For more info see  [game/COPYI
 
 2010-2011 Originally created in by Ilkka Halila (aka Generic Container), gencontain@gmail.com; Twitter: ihalila
 
-2020-2023 Brought back to live and maintained by Nikolay Shaplov (aka dhyan.nataraj), dhyan@nataraj.su; Matrix: @dhyan:nataraj.su
+2020-2024 Maintained by Nikolay Shaplov (aka dhyan.nataraj), dhyan@nataraj.su; Matrix: @dhyan:nataraj.su
