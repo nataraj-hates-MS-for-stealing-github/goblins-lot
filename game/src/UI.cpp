@@ -300,72 +300,93 @@ void UI::HandleMouse() {
 				if (menuOpen && _state == UI_NORMAL) {
 					CloseMenu();
 				}
-				if (_state == UI_PLACEMENT && placeable) {
-					callback(Game::Inst()->TileAt(mouseInput.x, mouseInput.y));
-				} else if (_state == UI_AB_PLACEMENT && placeable) {
-					if (a.X() == 0) {
-						a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
+
+				if (_state == UI_PLACEMENT)
+				{
+					if (placeable)
+					{
+						callback(Game::Inst()->TileAt(mouseInput.x, mouseInput.y));
 					}
-					else if(!draggingPlacement || a.X() != b.X() || a.Y() != b.Y()) {
-						//Place construction from a->b
-						if (a.X() > b.X()) {
-							tmp = a.X();
-							a.X(b.X());
-							b.X(tmp);
-							xswap = true;
+					/* else -- do nothig*/
+				}
+				else if (_state == UI_AB_PLACEMENT && placeable)
+				{
+					if (placeable)
+					{
+						if (a.X() == 0) {
+							a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 						}
-						if (a.Y() > b.Y()) {
-							tmp = a.Y();
-							a.Y(b.Y());
-							b.Y(tmp);
-							yswap = true;
-						}
-						for (int ix = a.X(); ix <= b.X(); ++ix) {
-							if (!yswap) {
-								if (placementCallback(Coordinate(ix, a.Y()), _blueprint))
-									callback(Coordinate(ix, a.Y()));
-							} else {
-								if (placementCallback(Coordinate(ix, b.Y()), _blueprint))
+						else if(!draggingPlacement || a.X() != b.X() || a.Y() != b.Y()) {
+							//Place construction from a->b
+							if (a.X() > b.X()) {
+								tmp = a.X();
+								a.X(b.X());
+								b.X(tmp);
+								xswap = true;
+							}
+							if (a.Y() > b.Y()) {
+								tmp = a.Y();
+								a.Y(b.Y());
+								b.Y(tmp);
+								yswap = true;
+							}
+							for (int ix = a.X(); ix <= b.X(); ++ix) {
+								if (!yswap) {
+									if (placementCallback(Coordinate(ix, a.Y()), _blueprint))
+										callback(Coordinate(ix, a.Y()));
+								} else {
+									if (placementCallback(Coordinate(ix, b.Y()), _blueprint))
 									callback(Coordinate(ix, b.Y()));
+								}
 							}
-						}
-						for (int iy = a.Y(); iy <= b.Y(); ++iy) {
-							if (!xswap) {
-								if (placementCallback(Coordinate(b.X(), iy), _blueprint))
-									callback(Coordinate(b.X(), iy));
-							} else {
-								if (placementCallback(Coordinate(a.X(), iy), _blueprint))
-									callback(Coordinate(a.X(), iy));
+							for (int iy = a.Y(); iy <= b.Y(); ++iy) {
+								if (!xswap) {
+									if (placementCallback(Coordinate(b.X(), iy), _blueprint))
+										callback(Coordinate(b.X(), iy));
+								} else {
+									if (placementCallback(Coordinate(a.X(), iy), _blueprint))
+										callback(Coordinate(a.X(), iy));
+								}
 							}
+							a.X(0); a.Y(0); b.X(0); b.Y(0);
 						}
-						a.X(0); a.Y(0); b.X(0); b.Y(0);
 					}
-				} else if (_state == UI_RECT_PLACEMENT && placeable) {
-					if (a.X() == 0) {
-						a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
-					}
-					else if(!draggingPlacement || a.X() != b.X() || a.Y() != b.Y()) {
-						//Place construction from a->b
-						if (a.X() > b.X()) {
-							tmp = a.X();
-							a.X(b.X());
-							b.X(tmp);
-							xswap = true;
+					/* else -- do nothig*/
+				}
+				else if (_state == UI_RECT_PLACEMENT)
+				{
+					if (placeable)
+					{
+						if (a.X() == 0) {
+							a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 						}
-						if (a.Y() > b.Y()) {
-							tmp = a.Y();
-							a.Y(b.Y());
-							b.Y(tmp);
-							yswap = true;
-						}
+						else if(!draggingPlacement || a.X() != b.X() || a.Y() != b.Y()) {
+							//Place construction from a->b
+							if (a.X() > b.X()) {
+								tmp = a.X();
+								a.X(b.X());
+								b.X(tmp);
+								xswap = true;
+							}
+							if (a.Y() > b.Y()) {
+								tmp = a.Y();
+								a.Y(b.Y());
+									b.Y(tmp);
+								yswap = true;
+							}
 
-						/*I removed the placement call from here, it causes unnecessary cancelations
-						Callbacks should check tile validity anyway*/
-						rectCallback(a,b);
+							/*I removed the placement call from here, it causes unnecessary cancelations
+							Callbacks should check tile validity anyway*/
+							rectCallback(a,b);
 
-						a.X(0); a.Y(0); b.X(0); b.Y(0);
+							a.X(0); a.Y(0); b.X(0); b.Y(0);
+						}
 					}
-				} else { //Current state is not any kind of placement, so open construction/npc context menu if over one
+					/* else -- do nothig*/
+				}
+				else
+				{
+					//Current state is not any kind of placement, so open construction/npc context menu if over one
 					if (!underCursor.empty()) sideBar.SetEntity(*underCursor.begin());
 					else sideBar.SetEntity(boost::weak_ptr<Entity>());
 				}
