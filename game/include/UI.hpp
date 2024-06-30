@@ -28,12 +28,12 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "Game.hpp"
 
 enum UIState {
-	UINORMAL,		 // No selection highlights
-	UIPLACEMENT,
-	UIABPLACEMENT,
-	UIRECTPLACEMENT,
-	UI_DRAG_VIEWPORT,
-	UICOUNT
+	UI_NORMAL,         // No selection highlights
+	UI_PLACEMENT,      // Placing fixed-sized buildong
+	UI_AB_PLACEMENT,   // Placing linear constriction from A to B (e.g. wall)
+	UI_RECT_PLACEMENT, // Placing rectngle area (e.g. farm plot)
+	UI_DRAG_VIEWPORT,  // UI is in Drag Viewport mode
+	UI_LAST_STATE      // List terminator
 };
 
 static const TCOD_key_t NO_KEY = {

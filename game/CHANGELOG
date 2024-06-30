@@ -14,7 +14,8 @@ Goblin Camp Changelog
   - Import boost::thread -> std::thread patch from goblin-camp-legacy written
     by CatPlusPlus (c51c7fe1 -> 0d2930ef)
   - Do `GetShuffledDirections` same way as CatPlusPlus did in 3078cba1
-    but with HexDecimal1's implementation inside (bd8c26c3, )
+    but with HexDecimal1's implementation inside (bd8c26c3, 39bc0456)
+  - Add underscore to `UIState` names to make code more readable ()
 
 -- version 0.23 (2023-07-09) --
 

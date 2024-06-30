@@ -186,8 +186,8 @@ Menu* Menu::ConstructionCategoryMenu(std::string category) {
 				if(preset.tags[STOCKPILE] || preset.tags[FARMPLOT]) {
 					menu->AddChoice(MenuChoice(preset.name, boost::bind(UI::ChooseStockpile, i), preset.tier <= Camp::Inst()->GetTier(), preset.description));
 				} else {
-					UIState placementType = UIPLACEMENT;
-					if(preset.placementType > 0 && preset.placementType < UICOUNT) {
+					UIState placementType = UI_PLACEMENT;
+					if(preset.placementType > 0 && preset.placementType < UI_LAST_STATE) {
 						placementType = (UIState)preset.placementType;
 					}
 					menu->AddChoice(MenuChoice(preset.name, boost::bind(UI::ChooseConstruct, i, placementType), preset.tier <= Camp::Inst()->GetTier(), preset.description));

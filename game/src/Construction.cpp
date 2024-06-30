@@ -950,7 +950,7 @@ ConstructionPreset::ConstructionPreset() :
 	dynamic(false),
 	spawnCreaturesTag(""),
 	spawnFrequency(10),
-	placementType(UIPLACEMENT),
+	placementType(UI_PLACEMENT),
 	blocksLight(true),
 	permanent(false),
 	color(GCampColor::black),

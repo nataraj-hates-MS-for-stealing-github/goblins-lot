@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-             2020-2023 Nikolay Shaplov (aka dhyan.nataraj)
+             2020-2024 Nikolay Shaplov (aka dhyan.nataraj)
 This file is part of Goblin Camp.
 
 Goblin Camp is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ UI* UI::instance = 0;
 
 UI::UI() :
 menuOpen(false),
-	_state(UINORMAL),
+	_state(UI_NORMAL),
 	_blueprint(1,1),
 	placeable(false),
 	underCursor(std::list<boost::weak_ptr<Entity> >()),
@@ -266,15 +266,15 @@ void UI::HandleMouse() {
 	if (newMouseInput.mbutton_pressed) mbuttonPressed = true;
 	if (newMouseInput.rbutton_pressed) rbuttonPressed = true;
 
-	if (_state == UINORMAL) {
+	if (_state == UI_NORMAL) {
 		HandleUnderCursor(Game::Inst()->TileAt(mouseInput.x, mouseInput.y), &underCursor);
 	}
 
-	if (_state == UIPLACEMENT || _state == UIABPLACEMENT || _state == UIRECTPLACEMENT) {
+	if (_state == UI_PLACEMENT || _state == UI_AB_PLACEMENT || _state == UI_RECT_PLACEMENT) {
 		placeable = placementCallback(Game::Inst()->TileAt(mouseInput.x, mouseInput.y), _blueprint);
 	}
 
-	if (_state == UIABPLACEMENT || _state == UIRECTPLACEMENT) {
+	if (_state == UI_AB_PLACEMENT || _state == UI_RECT_PLACEMENT) {
 		b = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 	}
 
@@ -282,7 +282,7 @@ void UI::HandleMouse() {
 
 	if (lbuttonPressed) { // When Left Button is actually released (name is confusing)
 		if (_state == UI_DRAG_VIEWPORT) {
-			_state = UINORMAL; // Button is released, go back to normal
+			_state = UI_NORMAL; // Button is released, go back to normal
 		} else {
 			menuResult = NOMENUHIT;
 			if(!draggingPlacement) {
@@ -297,12 +297,12 @@ void UI::HandleMouse() {
 				}
 			}
 			if (menuResult & NOMENUHIT) {
-				if (menuOpen && _state == UINORMAL) {
+				if (menuOpen && _state == UI_NORMAL) {
 					CloseMenu();
 				}
-				if (_state == UIPLACEMENT && placeable) {
+				if (_state == UI_PLACEMENT && placeable) {
 					callback(Game::Inst()->TileAt(mouseInput.x, mouseInput.y));
-				} else if (_state == UIABPLACEMENT && placeable) {
+				} else if (_state == UI_AB_PLACEMENT && placeable) {
 					if (a.X() == 0) {
 						a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 					}
@@ -340,7 +340,7 @@ void UI::HandleMouse() {
 						}
 						a.X(0); a.Y(0); b.X(0); b.Y(0);
 					}
-				} else if (_state == UIRECTPLACEMENT && placeable) {
+				} else if (_state == UI_RECT_PLACEMENT && placeable) {
 					if (a.X() == 0) {
 						a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 					}
@@ -379,12 +379,12 @@ void UI::HandleMouse() {
 				menuResult = currentMenu->Update(mouseInput.cx, mouseInput.cy, false, NO_KEY);
 			}
 			if (menuResult & NOMENUHIT) {
-				if (_state == UIABPLACEMENT && placeable) {
+				if (_state == UI_AB_PLACEMENT && placeable) {
 					if (a.X() == 0) {
 						a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 						draggingPlacement = true;
 					}
-				} else if (_state == UIRECTPLACEMENT && placeable) {
+				} else if (_state == UI_RECT_PLACEMENT && placeable) {
 					if (a.X() == 0) {
 						a = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 						draggingPlacement = true;
@@ -399,7 +399,7 @@ void UI::HandleMouse() {
 		menuY = mouseInput.cy;
 		menuOpen = !menuOpen;
 		currentMenu->selected(-1);
-		if (!menuOpen || _state != UINORMAL) {
+		if (!menuOpen || _state != UI_NORMAL) {
 			CloseMenu();
 		}
 		currentMenu = 0;
@@ -423,7 +423,7 @@ void UI::HandleMouse() {
 
 	if (mbuttonPressed && menuOpen && !menuHistory.empty()) {
 		currentMenu->selected(-1);
-		_state = UINORMAL; a.X(0); a.Y(0);
+		_state = UI_NORMAL; a.X(0); a.Y(0);
 		currentMenu->Close();
 		currentMenu = menuHistory.back();
 		currentMenu->Open();
@@ -431,7 +431,7 @@ void UI::HandleMouse() {
 	}
 
 	 if (newMouseInput.lbutton) { // Left button is being held down
-		if (_state == UINORMAL) {
+		if (_state == UI_NORMAL) {
 			if (newMouseInput.dx != 0 || newMouseInput.dy != 0)
 			{
 				_state = UI_DRAG_VIEWPORT;
@@ -467,10 +467,10 @@ void UI::Draw(TCODConsole* console) {
 	Coordinate mouseTile(Game::Inst()->TileAt(mouseInput.x, mouseInput.y));
 	boost::shared_ptr<MapRenderer> renderer = Game::Inst()->Renderer();
 
-	if (_state == UIPLACEMENT || ((_state == UIABPLACEMENT || _state == UIRECTPLACEMENT) && a.X() == 0)) {
+	if (_state == UI_PLACEMENT || ((_state == UI_AB_PLACEMENT || _state == UI_RECT_PLACEMENT) && a.X() == 0)) {
 		renderer->DrawCursor(mouseTile, Coordinate(mouseTile.X() + _blueprint.X() - 1, mouseTile.Y() + _blueprint.Y() - 1), placeable);
 	}
-	else if (_state == UIABPLACEMENT && a.X() > 0) {
+	else if (_state == UI_AB_PLACEMENT && a.X() > 0) {
 		if (a.X() > b.X()) {
 			tmp = a.X();
 			a.X(b.X());
@@ -509,7 +509,7 @@ void UI::Draw(TCODConsole* console) {
 			a.Y(b.Y());
 			b.Y(tmp);
 		}
-	} else if (_state == UIRECTPLACEMENT && a.X() > 0) {
+	} else if (_state == UI_RECT_PLACEMENT && a.X() > 0) {
 		if (a.X() > b.X()) {
 			tmp = a.X();
 			a.X(b.X());
@@ -550,7 +550,7 @@ void UI::Draw(TCODConsole* console) {
 
 	sideBar.GetTooltip(mouseInput.cx, mouseInput.cy, tooltip, console);
 
-	if (_state == UINORMAL && (!menuOpen || (currentMenu->Update(mouseInput.cx, mouseInput.cy, false, NO_KEY) & NOMENUHIT)) 
+	if (_state == UI_NORMAL && (!menuOpen || (currentMenu->Update(mouseInput.cx, mouseInput.cy, false, NO_KEY) & NOMENUHIT))
 		&& (sideBar.Update(mouseInput.cx, mouseInput.cy, false) & NOMENUHIT)
 		&& (Announce::Inst()->Update(mouseInput.cx, mouseInput.cy, false) & NOMENUHIT)
 		&& !underCursor.empty()) {
@@ -688,10 +688,10 @@ void UI::ChooseStockpile(ConstructionType stockpile) {
 	int stockpileSymbol = '%';
 	if (Construction::Presets[stockpile].tags[STOCKPILE]) {
 		UI::Inst()->SetCallback(boost::bind(Game::PlaceStockpile, _1, _1, stockpile, stockpileSymbol));
-		UI::Inst()->state(UIPLACEMENT);
+		UI::Inst()->state(UI_PLACEMENT);
 	} else {
 		UI::Inst()->SetRectCallback(boost::bind(Game::PlaceStockpile, _1, _2, stockpile, stockpileSymbol));
-		UI::Inst()->state(UIRECTPLACEMENT);
+		UI::Inst()->state(UI_RECT_PLACEMENT);
 	}
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckPlacement, _1, _2, Construction::Presets[stockpile].tileReqs));
 	UI::Inst()->blueprint(Construction::Blueprint(stockpile));
@@ -701,7 +701,7 @@ void UI::ChooseStockpile(ConstructionType stockpile) {
 }
 
 void UI::ChooseTreeFelling() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(Game::FellTree, _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -711,7 +711,7 @@ void UI::ChooseTreeFelling() {
 }
 
 void UI::ChoosePlantHarvest() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(Game::HarvestWildPlant, _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -721,7 +721,7 @@ void UI::ChoosePlantHarvest() {
 }
 
 void UI::ChooseOrderTargetCoordinate(boost::shared_ptr<Squad> squad, Order order) {
-	UI::Inst()->state(UIPLACEMENT);
+	UI::Inst()->state(UI_PLACEMENT);
 	bool autoClose = true;
 	if (order == PATROL) {
 		autoClose = false;
@@ -734,7 +734,7 @@ void UI::ChooseOrderTargetCoordinate(boost::shared_ptr<Squad> squad, Order order
 }
 
 void UI::ChooseOrderTargetEntity(boost::shared_ptr<Squad> squad, Order order) {
-	UI::Inst()->state(UIPLACEMENT);
+	UI::Inst()->state(UI_PLACEMENT);
 	UI::Inst()->SetCallback(boost::bind(Game::SetSquadTargetEntity, order, _1, squad));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, Coordinate(1,1)));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -742,7 +742,7 @@ void UI::ChooseOrderTargetEntity(boost::shared_ptr<Squad> squad, Order order) {
 }
 
 void UI::ChooseDesignateTree() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(Game::DesignateTree, _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -752,7 +752,7 @@ void UI::ChooseDesignateTree() {
 }
 
 void UI::ChooseDismantle() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(Game::DismantleConstruction, _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -762,7 +762,7 @@ void UI::ChooseDismantle() {
 }
 
 void UI::ChooseUndesignate() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(Game::Undesignate, _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -772,7 +772,7 @@ void UI::ChooseUndesignate() {
 }
 
 void UI::ChooseDesignateBog() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(Game::DesignateBog, _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTileType, TILEBOG, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -852,7 +852,7 @@ void UI::HideMenu() {
 
 void UI::CloseMenu() {
 	menuOpen = false;
-	_state = UINORMAL;
+	_state = UI_NORMAL;
 	a.X(0); a.Y(0);
 	textMode = false;
 	if (currentMenu) currentMenu->Close();
@@ -873,7 +873,7 @@ void UI::ChooseCreateNPC() {
 	NPCChoiceMenu->ShowModal();
 
 	if (npc >= 0) {
-		UI::Inst()->state(UIPLACEMENT);
+		UI::Inst()->state(UI_PLACEMENT);
 		UI::Inst()->SetCallback(boost::bind(&Game::CreateNPC, Game::Inst(), _1, NPCType(npc)));
 		UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, Coordinate(1,1)));
 		UI::Inst()->blueprint(Coordinate(1,1));
@@ -899,7 +899,7 @@ void UI::ChooseCreateItem() {
 	ItemChoiceMenu->ShowModal();
 
 	if (item >= 0) {
-		UI::Inst()->state(UIPLACEMENT);
+		UI::Inst()->state(UI_PLACEMENT);
 		UI::Inst()->SetCallback(boost::bind(&Game::CreateItem, Game::Inst(), _1, ItemType(item), false,
 			0, std::vector<boost::weak_ptr<Item> >(), boost::shared_ptr<Container>()));
 		UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, Coordinate(1,1)));
@@ -910,7 +910,7 @@ void UI::ChooseCreateItem() {
 }
 
 void UI::ChooseDig() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(Game::Dig, _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckPlacement, _1, _2, std::set<TileType>()));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -930,7 +930,7 @@ void UI::ChooseChangeTerritory(bool add) {
 		Camp::Inst()->DisableAutoTerritory();
 		Announce::Inst()->AddMsg("Automatic territory handling disabled", GCampColor::cyan);
 	}
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(&Map::SetTerritoryRectangle, Map::Inst(), _1, _2, add));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -940,7 +940,7 @@ void UI::ChooseChangeTerritory(bool add) {
 }
 
 void UI::ChooseGatherItems() {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(boost::bind(&Game::GatherItems, Game::Inst(), _1, _2));
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckTree, _1, _2));
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -950,7 +950,7 @@ void UI::ChooseGatherItems() {
 }
 
 void UI::ChooseNormalPlacement(boost::function<void(Coordinate)> callback, boost::function<bool(Coordinate, Coordinate)> placement, int cursor, std::string optionalTooltip) {
-	UI::Inst()->state(UIPLACEMENT);
+	UI::Inst()->state(UI_PLACEMENT);
 	UI::Inst()->SetCallback(callback);
 	UI::Inst()->SetPlacementCallback(placement);
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -962,7 +962,7 @@ void UI::ChooseNormalPlacement(boost::function<void(Coordinate)> callback, boost
 }
 
 void UI::ChooseRectPlacement(boost::function<void(Coordinate, Coordinate)> rectCallback, boost::function<bool(Coordinate, Coordinate)> placement, int cursor, std::string optionalTooltip) {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(rectCallback);
 	UI::Inst()->SetPlacementCallback(placement);
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -974,7 +974,7 @@ void UI::ChooseRectPlacement(boost::function<void(Coordinate, Coordinate)> rectC
 }
 
 void UI::ChooseRectPlacementCursor(boost::function<void(Coordinate, Coordinate)> rectCallback, boost::function<bool(Coordinate, Coordinate)> placement, CursorType cursor) {
-	UI::Inst()->state(UIRECTPLACEMENT);
+	UI::Inst()->state(UI_RECT_PLACEMENT);
 	UI::Inst()->SetRectCallback(rectCallback);
 	UI::Inst()->SetPlacementCallback(placement);
 	UI::Inst()->blueprint(Coordinate(1,1));
@@ -982,7 +982,7 @@ void UI::ChooseRectPlacementCursor(boost::function<void(Coordinate, Coordinate)>
 }
 
 void UI::ChooseABPlacement(boost::function<void(Coordinate)> callback, boost::function<bool(Coordinate, Coordinate)> placement, int cursor, std::string optionalTooltip) {
-	UI::Inst()->state(UIABPLACEMENT);
+	UI::Inst()->state(UI_AB_PLACEMENT);
 	UI::Inst()->SetCallback(callback);
 	UI::Inst()->SetPlacementCallback(placement);
 	UI::Inst()->blueprint(Coordinate(1,1));
