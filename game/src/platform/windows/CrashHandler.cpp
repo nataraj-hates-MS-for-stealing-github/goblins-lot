@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-This file is part of Goblin Camp.
+This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ namespace {
 		
 		SHGetFolderPathAndSubDir(
 			NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL,
-			SHGFP_TYPE_CURRENT, "My Games\\Goblin Camp\\crashes", dumpPath
+			SHGFP_TYPE_CURRENT, "My Games\\Goblins' Lot\\crashes", dumpPath
 		);
 		
 		strftime(date, 20, "%Y-%m-%d_%H-%M-%S", timeStruct);
@@ -56,7 +56,7 @@ namespace {
 		_snprintf(dumpPath, MAX_PATH, "%s\\%s", dumpPath, dumpFilename);
 		
 		char buffer[MAX_PATH + 200];
-		_snprintf(buffer, MAX_PATH + 200, "[Goblin Camp] Dump will be written to: %s", dumpFilename);
+		_snprintf(buffer, MAX_PATH + 200, "[Goblins' Lot] Dump will be written to: %s", dumpFilename);
 		OutputDebugString(buffer);
 	}
 	
@@ -70,11 +70,11 @@ namespace {
 		);
 		
 		if (dump == INVALID_HANDLE_VALUE) {
-			OutputDebugString(TEXT("[Goblin Camp] Could not create crash dump."));
+			OutputDebugString(TEXT("[Goblins' Lot] Could not create crash dump."));
 			return false;
 		}
 		
-		OutputDebugString(TEXT("[Goblin Camp] Trying to write minidump."));
+		OutputDebugString(TEXT("[Goblins' Lot] Trying to write minidump."));
 		
 		MINIDUMP_EXCEPTION_INFORMATION dumpExcInfo;
 		MINIDUMP_CALLBACK_INFORMATION  dumpCallback;
@@ -100,7 +100,7 @@ namespace {
 		
 		if (!result) {
 			char buffer[256];
-			_snprintf(buffer, 256, "[Goblin Camp] MiniDumpWriteDump failed: 0x%X", HRESULT_FROM_WIN32(GetLastError()));
+			_snprintf(buffer, 256, "[Goblins' Lot] MiniDumpWriteDump failed: 0x%X", HRESULT_FROM_WIN32(GetLastError()));
 			OutputDebugString(buffer);
 		}
 		
@@ -124,7 +124,7 @@ namespace {
 					wchar_t filename[_MAX_FNAME];
 					_wsplitpath_s(input->Module.FullPath, NULL, 0, NULL, 0, filename, _MAX_FNAME, NULL, 0);
 					
-					if (wcsicmp(filename, L"goblin-camp") != 0 && wcsicmp(filename, L"ntdll") != 0) {
+					if (wcsicmp(filename, L"goblins-lot") != 0 && wcsicmp(filename, L"ntdll") != 0) {
 						output->ModuleWriteFlags = ModuleWriteModule;
 					}
 				}
@@ -134,7 +134,7 @@ namespace {
 	}
 	
 	LONG ExecuteCrashReporter(char dumpFilename[MAX_PATH]) {
-		std::string crashExe = (Paths::Get(Paths::ExecutableDir) / "goblin-camp-crash.exe").string();
+		std::string crashExe = (Paths::Get(Paths::ExecutableDir) / "goblins-lot-crash.exe").string();
 		
 		PROCESS_INFORMATION procInfo;
 		STARTUPINFO startupInfo;
@@ -178,7 +178,7 @@ namespace {
 	#endif
 	
 	LONG CALLBACK ExceptionHandler(EXCEPTION_POINTERS *exception) {
-		OutputDebugString(TEXT("[Goblin Camp] Unhandled exception occured."));
+		OutputDebugString(TEXT("[Goblins' Lot] Unhandled exception occured."));
 		
 		char dumpPath[MAX_PATH], dumpFilename[MAX_PATH];
 		GetDumpFilename(dumpPath, dumpFilename);

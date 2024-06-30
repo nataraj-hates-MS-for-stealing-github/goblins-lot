@@ -1,6 +1,6 @@
 /* Copyright 2010-2011 Ilkka Halila
              2020-2022 Nikolay Shaplov (aka dhyan.nataraj)
-This file is part of Goblin Camp.
+This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,5 +35,5 @@ namespace Globals {
 #else
 #define GCAMP_FULL_VERSION "v" GCAMP_VERSION
 #endif
-	const char *gameVersion = "Goblin Camp " GCAMP_FULL_VERSION;
+	const char *gameVersion = "Goblins' Lot " GCAMP_FULL_VERSION;
 }

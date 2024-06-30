@@ -5,7 +5,7 @@ INSTALL(FILES terminal_x2.png DESTINATION ${GOBLIN_CAMP_SHAREDIR} RENAME termina
 
 # https://specifications.freedesktop.org/menu-spec/menu-spec-latest.html#paths
 # FIXME may be made it dependant on $XDG_DATA_DIRS later
-INSTALL(FILES goblin-camp.desktop  DESTINATION "${GOBLIN_CAMP_DATA_BASE_DIR}/applications")
+INSTALL(FILES goblins-lot.desktop  DESTINATION "${GOBLIN_CAMP_DATA_BASE_DIR}/applications")
 
 FOREACH(ICON_SIZE 16x16 32x32 48x48 128x128 256x256 )
   # Installing app icons to defaul "hicolor" theme

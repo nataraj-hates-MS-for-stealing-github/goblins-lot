@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-This file is part of Goblin Camp.
+This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ namespace PathsImpl {
 			NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, "My Games", myGames
 		);
 		
-		dir = fs::path(std::string(myGames)) / "Goblin Camp";
+		dir = fs::path(std::string(myGames)) / "Goblins' Lot";
 	}
 	
 	void FindExecutableDirectory(fs::path& exec, fs::path& execDir, fs::path& dataDir) {

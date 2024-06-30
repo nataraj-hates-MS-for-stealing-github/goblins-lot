@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.1.0) # Do not raise it without a reason. Bump only when you use some feature that is not supported by older verions
 
 # set the project name
-project(GoblinCamp C CXX)
+project(GoblinsLot C CXX)
 
-add_executable("goblin-camp")
+add_executable("goblins-lot")
 
 SET(GCAMP_VERSION "0.24")
 SET(GCAMP_VERSION_IS_RELEASE NO)
 
-TARGET_COMPILE_FEATURES("goblin-camp" PRIVATE cxx_std_17)
+TARGET_COMPILE_FEATURES("goblins-lot" PRIVATE cxx_std_17)
 
 #  -DBOOST_NO_CXX11_SCOPED_ENUMS -DBOOST_NO_SCOPED_ENUMS  https://stackoverflow.com/questions/18783790/boostfilesystemcopy-file-missing-symbol-in-c11
 # and Goblin Camp/src/data/Data.cpp fs::copy_file(source, target);
-TARGET_COMPILE_DEFINITIONS("goblin-camp" PRIVATE "-DBOOST_NO_CXX11_SCOPED_ENUMS -DBOOST_NO_SCOPED_ENUMS")
+TARGET_COMPILE_DEFINITIONS("goblins-lot" PRIVATE "-DBOOST_NO_CXX11_SCOPED_ENUMS -DBOOST_NO_SCOPED_ENUMS")
 
 # Add the path for the script to find libtcod
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -28,9 +28,9 @@ ELSE()
   MESSAGE(STATUS "Using no threads")
 ENDIF()
 
-SET(GOBLIN_CAMP_BINDIR ${CMAKE_INSTALL_PREFIX}/games CACHE PATH "Path to Goblin Camp binary")
+SET(GOBLIN_CAMP_BINDIR ${CMAKE_INSTALL_PREFIX}/games CACHE PATH "Path to Goblins' Lot binary")
 SET(GOBLIN_CAMP_DATA_BASE_DIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH "Base Data Dir Path")
-SET(GOBLIN_CAMP_SHAREDIR "${GOBLIN_CAMP_DATA_BASE_DIR}/games/goblin-camp" CACHE PATH "Path to Goblin Camp shared files")
+SET(GOBLIN_CAMP_SHAREDIR "${GOBLIN_CAMP_DATA_BASE_DIR}/games/goblins-lot" CACHE PATH "Path to Goblins' Lot shared files")
 
 find_package(Boost REQUIRED COMPONENTS system filesystem serialization iostreams)
 find_package(Boost COMPONENTS python REQUIRED)
@@ -168,26 +168,26 @@ SET (platform_SRC
 )
 
 # linxu specific code
-target_sources("goblin-camp" PRIVATE
+target_sources("goblins-lot" PRIVATE
     "game/src/platform/unix/main.cpp"
 )
 
-target_sources("goblin-camp" PRIVATE ${main_SRC} ${data_SRC} ${scripting_SRC} ${libtcod_SRC} ${UI_SRC} ${tileRenderer_SRC} ${platform_SRC})
+target_sources("goblins-lot" PRIVATE ${main_SRC} ${data_SRC} ${scripting_SRC} ${libtcod_SRC} ${UI_SRC} ${tileRenderer_SRC} ${platform_SRC})
 
 
-include_directories("goblin-camp" "game/include")
-include_directories("goblin-camp" "vendor/python-modules")
+include_directories("goblins-lot" "game/include")
+include_directories("goblins-lot" "vendor/python-modules")
 
 # FIXME This is not recomended (see note here: https://cmake.org/cmake/help/latest/command/file.html#filesystem)
 # Better find some other way. For example list them explicitly
 file(GLOB_RECURSE game_headers CONFIGURE_DEPENDS "game/include/*.hpp")
-target_sources("goblin-camp" PRIVATE ${game_headers})
+target_sources("goblins-lot" PRIVATE ${game_headers})
 
-target_compile_definitions("goblin-camp" PRIVATE GCAMP_USE_THREADS=$<BOOL:${USE_THREADS}>)
-target_compile_definitions("goblin-camp" PRIVATE GCAMP_VERSION=\"${GCAMP_VERSION}\")
-target_compile_definitions("goblin-camp" PRIVATE GCAMP_VERSION_IS_RELEASE=$<BOOL:${GCAMP_VERSION_IS_RELEASE}>)
+target_compile_definitions("goblins-lot" PRIVATE GCAMP_USE_THREADS=$<BOOL:${USE_THREADS}>)
+target_compile_definitions("goblins-lot" PRIVATE GCAMP_VERSION=\"${GCAMP_VERSION}\")
+target_compile_definitions("goblins-lot" PRIVATE GCAMP_VERSION_IS_RELEASE=$<BOOL:${GCAMP_VERSION_IS_RELEASE}>)
 
-target_link_libraries("goblin-camp"
+target_link_libraries("goblins-lot"
   ${SDL2_LIBRARY}
   ${SDL2_IMAGE_LIBRARY}
   ${PYTHON_LIBRARIES}
@@ -201,8 +201,8 @@ target_link_libraries("goblin-camp"
 )
 
 # Explciitly include header-only Boost libraries for the configuration provider
-target_include_directories("goblin-camp" PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories("goblins-lot" PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries("goblin-camp" ${Boost_PYTHON3_LIBRARY})
+target_link_libraries("goblins-lot" ${Boost_PYTHON3_LIBRARY})
 
-INSTALL(TARGETS "goblin-camp" RUNTIME DESTINATION ${GOBLIN_CAMP_BINDIR})
+INSTALL(TARGETS "goblins-lot" RUNTIME DESTINATION ${GOBLIN_CAMP_BINDIR})

@@ -1,6 +1,6 @@
 /* Copyright 2010-2011 Ilkka Halila
              2020-2023 Nikolay Shaplov (aka dhyan.nataraj)
-This file is part of Goblin Camp.
+This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -612,7 +612,7 @@ void Game::Init(bool firstTime) {
 
 	//Enabling TCOD_RENDERER_GLSL can cause GCamp to crash on exit, apparently it's because of an ATI driver issue.
 	TCOD_renderer_t renderer_type = static_cast<TCOD_renderer_t>(Config::GetCVar<int>("renderer"));
-	if (firstTime) TCODConsole::initRoot(screenWidth, screenHeight, "Goblin Camp", fullscreen, /* renderer_type*/ TCOD_RENDERER_SDL);
+	if (firstTime) TCODConsole::initRoot(screenWidth, screenHeight, "Goblins' Lot", fullscreen, /* renderer_type*/ TCOD_RENDERER_SDL);
 	TCODMouse::showCursor(true);
 //	TCODConsole::setKeyboardRepeat(500, 10); // FIXME! Does not exit in newer
 //	tcods

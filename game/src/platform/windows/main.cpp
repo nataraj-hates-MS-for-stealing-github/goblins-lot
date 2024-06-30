@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-This file is part of Goblin Camp.
+This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,8 +45,8 @@ int GC_MAIN_FUNCTION() {
 	
 	#ifdef GC_REDIRECT_STREAMS
 		HANDLE newStdOut, newStdErr;
-		newStdOut = CreateFile("./goblin-camp.stdout", GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		newStdErr = CreateFile("./goblin-camp.stderr", GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		newStdOut = CreateFile("./goblins-lot.stdout", GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		newStdErr = CreateFile("./goblins-lot.stderr", GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		
 		if (newStdOut != INVALID_HANDLE_VALUE && newStdErr != INVALID_HANDLE_VALUE) {
 			SetStdHandle(STD_OUTPUT_HANDLE, newStdOut);

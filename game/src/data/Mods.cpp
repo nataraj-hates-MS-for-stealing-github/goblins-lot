@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-This file is part of Goblin Camp.
+This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -200,7 +200,7 @@ namespace Mods {
 	void Load() {
 		// load core data
 		LoadMod(Paths::Get(Paths::GlobalData) / "lib" / "gcamp_core", true);
-		Globals::loadedMods.begin()->mod = "Goblin Camp";
+		Globals::loadedMods.begin()->mod = "Goblins' Lot";
 		
 		// load user mods
 		for (fs::directory_iterator it(Paths::Get(Paths::Mods)), end; it != end; ++it) {

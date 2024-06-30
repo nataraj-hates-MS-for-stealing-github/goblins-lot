@@ -1,5 +1,5 @@
 /* Copyright 2010-2011 Ilkka Halila
-This file is part of Goblin Camp.
+This file is part of Goblins' Lot (former Goblin Camp)
 
 Goblin Camp is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ namespace PathsImpl {
 		char buffer[1024];
 		CFStringRef username, path;
 		username = CSCopyUserName(true);
-		path     = CFStringCreateWithFormat(NULL, NULL, CFSTR("/Users/%@/Library/Application Support/Goblin Camp"), username);
+		path     = CFStringCreateWithFormat(NULL, NULL, CFSTR("/Users/%@/Library/Application Support/Goblins' Lot"), username);
 		
 		CFStringGetCString(path, buffer, sizeof(buffer), kCFStringEncodingUTF8);
 		dir = fs::path(std::string(buffer));
