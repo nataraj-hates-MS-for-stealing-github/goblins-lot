@@ -21,6 +21,7 @@
 #include <boost/weak_ptr.hpp>
 
 #include "Entity.hpp"
+#include "NPC.hpp"
 
 class SideBar {
 	boost::weak_ptr<Entity> entity;

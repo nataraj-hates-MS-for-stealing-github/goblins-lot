@@ -37,6 +37,7 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "data/Data.hpp"
 #include "Camp.hpp"
 #include "UI/StockManagerDialog.hpp"
+#include "UI/Menu.hpp"
 #include "UI/SquadsDialog.hpp"
 #include "UI/ConstructionDialog.hpp"
 #include "UI/AnnounceDialog.hpp"
@@ -300,8 +301,12 @@ void UI::HandleMouse() {
 				if (menuOpen && _state == UI_NORMAL) {
 					CloseMenu();
 				}
-
-				if (_state == UI_PLACEMENT)
+				if (_state == UI_DESIGNATE_MODE)
+				{
+					Coordinate tile_pos = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
+					tmp_designate->MouseLClickProcess(tile_pos.X(), tile_pos.Y());
+				}
+				else if (_state == UI_PLACEMENT)
 				{
 					if (placeable)
 					{
@@ -416,35 +421,53 @@ void UI::HandleMouse() {
 	}
 
 	if (rbuttonPressed) {
-		menuX = mouseInput.cx;
-		menuY = mouseInput.cy;
-		menuOpen = !menuOpen;
-		currentMenu->selected(-1);
-		if (!menuOpen || _state != UI_NORMAL) {
-			CloseMenu();
-		}
-		/* Cancel designation mode if we ever have one */
-		if (Game::Inst()->tmp_designate)
-			Game::Inst()->tmp_designate.reset();
+		if (_state == UI_DESIGNATE_MODE)
+		{
+			/* Exit Designate Mode on mouse right click*/
+			if (tmp_designate)
+			{
+				tmp_designate.reset();
+			}
+			else
+			{
+				/*FIXME Assert here, we MUST have designate object in UI_DESIGNATE_MODE */
+			}
+			_state = UI_NORMAL;
+			extraTooltip = "";
+		} else
+		{
+			if (tmp_designate)
+			{
+				/*FIXME Assert here, there should be no designate object when not in UI_DESIGNATE_MODE */
+			}
 
-		currentMenu = 0;
-		if(!underCursor.empty()) {
-			if (underCursor.begin()->lock()) {
-				if (boost::dynamic_pointer_cast<Construction>(underCursor.begin()->lock())) {
-					if (!boost::static_pointer_cast<Construction>(underCursor.begin()->lock())->DismantlingOrdered())
+			menuX = mouseInput.cx;
+			menuY = mouseInput.cy;
+			menuOpen = !menuOpen;
+			currentMenu->selected(-1);
+			if (!menuOpen || _state != UI_NORMAL) {
+			CloseMenu();
+			}
+
+
+			currentMenu = 0;
+			if(!underCursor.empty()) {
+				if (underCursor.begin()->lock()) {
+					if (boost::dynamic_pointer_cast<Construction>(underCursor.begin()->lock())) {
+						if (!boost::static_pointer_cast<Construction>(underCursor.begin()->lock())->DismantlingOrdered())
+							currentMenu = underCursor.begin()->lock()->GetContextMenu();
+					} else {
 						currentMenu = underCursor.begin()->lock()->GetContextMenu();
-				} else {
-					currentMenu = underCursor.begin()->lock()->GetContextMenu();
+					}
 				}
 			}
+			if(!currentMenu) {
+				currentMenu = Menu::MainMenu();
+			}
+			if (menuOpen) currentMenu->Open();
+			menuHistory.clear();
+			extraTooltip = "";
 		}
-		if(!currentMenu) {
-			currentMenu = Menu::MainMenu();
-		}
-		if (menuOpen) currentMenu->Open();
-		menuHistory.clear();
-		extraTooltip = "";
-
 		/* Make sure uderCursor list does not have any remnants to prevent tooltip blinking */
 		underCursor.clear();
 	}
@@ -491,11 +514,14 @@ void UI::Draw(TCODConsole* console) {
 	if (menuOpen) {
 		currentMenu->Draw(menuX, menuY, console);
 	}
-	
-	Coordinate mouseTile(Game::Inst()->TileAt(mouseInput.x, mouseInput.y));
+
+	Coordinate mouseTile = Game::Inst()->TileAt(mouseInput.x, mouseInput.y);
 	boost::shared_ptr<MapRenderer> renderer = Game::Inst()->Renderer();
 
-	if (_state == UI_PLACEMENT || ((_state == UI_AB_PLACEMENT || _state == UI_RECT_PLACEMENT) && a.X() == 0)) {
+	if (_state == UI_DESIGNATE_MODE)
+	{
+		renderer->RenderDesignateMode(mouseTile);
+	} else 	if (_state == UI_PLACEMENT || ((_state == UI_AB_PLACEMENT || _state == UI_RECT_PLACEMENT) && a.X() == 0)) {
 		renderer->DrawCursor(mouseTile, Coordinate(mouseTile.X() + _blueprint.X() - 1, mouseTile.Y() + _blueprint.Y() - 1), placeable);
 	}
 	else if (_state == UI_AB_PLACEMENT && a.X() > 0) {
@@ -703,14 +729,17 @@ void UI::SetRectCallback(boost::function<void(Coordinate,Coordinate)> newCallbac
 void UI::SetPlacementCallback(boost::function<bool(Coordinate,Coordinate)> newCallback) {placementCallback = newCallback;}
 
 void UI::ChooseConstruct(ConstructionType construct, UIState state) {
-	UI::Inst()->SetCallback(boost::bind(Game::PlaceConstruction, _1, construct));
-	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckPlacement, _1, _2, Construction::Presets[construct].tileReqs));
-	UI::Inst()->blueprint(Construction::Blueprint(construct));
+	ConstructionPreset presets = Construction::Presets[construct];
+//	UI::Inst()->SetCallback(boost::bind(Game::PlaceConstruction, _1, construct));
+//	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckPlacement, _1, _2, presets.tileReqs));
+//	UI::Inst()->blueprint(Construction::Blueprint(construct));
 	UI::Inst()->state(state);
-	Game::Inst()->Renderer()->SetCursorMode(Cursor_Construct);
-	Game::Inst()->tmp_designate = std::make_shared<Designate>();
+//	Game::Inst()->Renderer()->SetCursorMode(Cursor_Construct);
+	UI::Inst()->tmp_designate = std::make_shared<DesignateConstruction>(presets.blueprint);
+	UI::Inst()->tmp_designate->SetPlaceConstructionCallback(boost::bind(Game::PlaceConstruction, _1, construct));
+
 	UI::Inst()->HideMenu();
-	UI::Inst()->SetExtraTooltip(Construction::Presets[construct].name);
+	UI::Inst()->SetExtraTooltip(presets.name);
 }
 
 void UI::ChooseStockpile(ConstructionType stockpile) {

@@ -284,8 +284,6 @@ public:
 
 	void DisplayStats();
 	void ProvideMap();
-
-	std::shared_ptr<Designate> tmp_designate; // Just for experements for now
 };
 
 BOOST_CLASS_VERSION(Game, 1)

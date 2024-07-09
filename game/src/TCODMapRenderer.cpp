@@ -24,6 +24,7 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "Game.hpp"
 #include "MathEx.hpp"
 #include "Color.hpp"
+#include "UI.hpp"
 
 TCODMapRenderer::TCODMapRenderer(TCODConsole * mapConsole) :
 	console(mapConsole),
@@ -215,12 +216,6 @@ void TCODMapRenderer::SetCursorMode(int other) {
 }
 
 void TCODMapRenderer::DrawCursor(const Coordinate& start, const Coordinate& end, bool placeable) {
-	if (Game::Inst()->tmp_designate)
-	{
-		Game::Inst()->tmp_designate->Draw(console, start, upleft);
-		return;
-	}
-	/* Old behaviour */
 	for (int x = std::max(0, start.X() - upleft.X()); x <= std::min(console->getWidth() - 1, end.X() - upleft.X()); ++x)
 	{
 		for (int y = std::max(0, start.Y() - upleft.Y()); y <= std::min(console->getHeight() - 1, end.Y() - upleft.Y()); ++y)
@@ -240,6 +235,16 @@ void TCODMapRenderer::DrawCursor(const Coordinate& pos, bool placeable) {
 	}
 }
 
+void TCODMapRenderer::RenderDesignateMode(const Coordinate& mouse_tile_pos)
+{
+	if (UI::Inst()->tmp_designate)
+	{
+		UI::Inst()->tmp_designate->Draw(console, mouse_tile_pos, upleft);
+	} else
+	{
+		//FIXME Assert here
+	}
+}
 
 void TCODMapRenderer::SetTranslucentUI(bool) {}
 
