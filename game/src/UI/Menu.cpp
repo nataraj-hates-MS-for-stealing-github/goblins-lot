@@ -186,7 +186,7 @@ Menu* Menu::ConstructionCategoryMenu(std::string category) {
 				if(preset.tags[STOCKPILE] || preset.tags[FARMPLOT]) {
 					menu->AddChoice(MenuChoice(preset.name, boost::bind(UI::ChooseStockpile, i), preset.tier <= Camp::Inst()->GetTier(), preset.description));
 				} else {
-					UIState placementType = UI_PLACEMENT;
+					UIState placementType = UI_DESIGNATE_MODE;  // FIXME: This value is never actually used as preset has default value. May be add assertion if check below is failed
 					if(preset.placementType > 0 && preset.placementType < UI_LAST_STATE) {
 						placementType = (UIState)preset.placementType;
 					}

@@ -22,7 +22,6 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include <boost/function.hpp>
 #include <boost/weak_ptr.hpp>
 
-#include "UI/Menu.hpp"
 #include "UI/SideBar.hpp"
 #include "Entity.hpp"
 #include "Game.hpp"
@@ -33,6 +32,7 @@ enum UIState {
 	UI_AB_PLACEMENT,   // Placing linear constriction from A to B (e.g. wall)
 	UI_RECT_PLACEMENT, // Placing rectngle area (e.g. farm plot)
 	UI_DRAG_VIEWPORT,  // UI is in Drag Viewport mode
+	UI_DESIGNATE_MODE, // Placing something using Designate object
 	UI_LAST_STATE      // List terminator
 };
 
@@ -41,6 +41,7 @@ static const TCOD_key_t NO_KEY = {
 };
 
 class UI {
+	friend class TCODMapRenderer; /* Let renderer access UI internals. Though it is bad design*/
 private:
 	UI();
 	static UI* instance;
@@ -77,6 +78,8 @@ private:
 	void HandleKeyboard();
 	void HandleMouse();
 	boost::weak_ptr<Entity> currentStrobeTarget;
+protected:
+	std::shared_ptr<Designate> tmp_designate; // Just for experements for now
 public:
 	static UI* Inst();
 	static void Reset();

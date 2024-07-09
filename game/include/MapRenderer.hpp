@@ -79,6 +79,8 @@ public:
 	virtual void DrawCursor(const Coordinate& pos, bool placeable) = 0;
 	virtual void DrawCursor(const Coordinate& start, const Coordinate& end, bool placeable) = 0;
 
+	virtual void RenderDesignateMode(const Coordinate& mouse_tile_pos) = 0;
+
 	virtual void SetTranslucentUI(bool translucent) = 0;
 	void SetViewportSize(int width, int height);
 	void GetViewportSize(int& width, int& height);

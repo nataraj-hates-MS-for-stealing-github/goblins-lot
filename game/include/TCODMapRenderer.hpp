@@ -36,6 +36,8 @@ public:
 	void DrawCursor(const Coordinate& pos, bool placeable);
 	void DrawCursor(const Coordinate& start, const Coordinate& end, bool placeable);
 
+	virtual void RenderDesignateMode(const Coordinate& mouse_tile_pos) override;
+
 	void SetTranslucentUI(bool);
 
 	virtual int GetTileHeight() override;
