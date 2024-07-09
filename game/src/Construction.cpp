@@ -950,7 +950,7 @@ ConstructionPreset::ConstructionPreset() :
 	dynamic(false),
 	spawnCreaturesTag(""),
 	spawnFrequency(10),
-	placementType(UI_PLACEMENT),
+	placementType(UI_DESIGNATE_MODE), // Notmally in presets pacement type is omitted for building, and buildings are placed via Designate Mode
 	blocksLight(true),
 	permanent(false),
 	color(GCampColor::black),

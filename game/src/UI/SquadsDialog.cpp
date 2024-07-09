@@ -31,6 +31,7 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "UI.hpp"
 #include "UI/TextBox.hpp"
 #include "UI/Frame.hpp"
+#include "UI/Menu.hpp"
 #include "Announce.hpp"
 #include "MapMarker.hpp"
 #include "Color.hpp"

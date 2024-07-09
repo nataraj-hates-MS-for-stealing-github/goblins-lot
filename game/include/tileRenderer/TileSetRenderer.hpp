@@ -49,6 +49,8 @@ public:
 	void DrawCursor(const Coordinate& pos, bool placeable);
 	void DrawCursor(const Coordinate& start, const Coordinate& end, bool placeable);
 
+	virtual void RenderDesignateMode(const Coordinate& pos) override {/*FIXME!*/};
+
 	virtual void SetTranslucentUI(bool translucent);
 
 protected:

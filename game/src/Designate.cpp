@@ -32,17 +32,20 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Designate.hpp"
 #include "Color.hpp"
 
-void Designate::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft)
+#include "Logger.hpp"
+
+
+void DesignateConstruction::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft)
 {
 	TCOD_ColorRGB fg = GCampColor::green;
 	TCOD_ColorRGB bg = GCampColor::black;
 	auto g = Game::Inst();
-	int width = 3;
-	int height = 3;
+	int width = size.X();
+	int height = size.Y();
 
 	bool placeable;
 
-	placeable = g->CheckPlacement(pos,{height,width}, std::set<TileType>());
+	placeable = g->CheckPlacement(pos,{width,height}, std::set<TileType>());
 
 	for(int i=0; i < width; i++)
 	{
@@ -63,5 +66,10 @@ void Designate::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft)
 			console->putCharEx(x, y, blueprit_char, fg, bg );
 		}
 	}
+}
+
+void DesignateConstruction::MouseLClickProcess(int x, int y)
+{
+	placeConstructionCallback({x,y});
 }
 

@@ -50,6 +50,7 @@ namespace py = boost::python;
 #include "GCamp.hpp"
 #include "StockManager.hpp"
 #include "UI.hpp"
+#include "UI/Menu.hpp"
 #include "StatusEffect.hpp"
 #include "Stockpile.hpp"
 #include "Farmplot.hpp"

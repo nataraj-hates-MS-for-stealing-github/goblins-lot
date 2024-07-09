@@ -36,9 +36,28 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class Designate {
 	GC_SERIALIZABLE_CLASS
+protected:
 	char blueprit_char = '?';
+	boost::function<bool(Coordinate)> placeConstructionCallback;
 public:
-	virtual void Draw(TCODConsole* console, Coordinate pos, Coordinate upleft);
+	virtual void Draw(TCODConsole* console, Coordinate pos, Coordinate upleft) = 0;
+	virtual void MouseLClickProcess(int x, int y) = 0;
+
+	void SetPlaceConstructionCallback(boost::function<bool(Coordinate)> newCallback) {placeConstructionCallback = newCallback;}
+
+	Designate () {};
+	Designate (char bc): blueprit_char(bc) {}
+};
+
+class DesignateConstruction : public Designate {
+  Coordinate size;
+
+  public:
+	DesignateConstruction(Coordinate sz): size(sz), Designate('C') {};
+
+	virtual void Draw(TCODConsole* console, Coordinate pos, Coordinate upleft) override;
+	virtual void MouseLClickProcess(int tile_x, int tile_y) override;
+
 };
 
 BOOST_CLASS_VERSION(Designate, 0)
