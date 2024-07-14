@@ -5,8 +5,8 @@ project(GoblinsLot C CXX)
 
 add_executable("goblins-lot")
 
-SET(GCAMP_VERSION "0.241")
-SET(GCAMP_VERSION_IS_RELEASE YES)
+SET(GCAMP_VERSION "0.25")
+SET(GCAMP_VERSION_IS_RELEASE NO)
 
 TARGET_COMPILE_FEATURES("goblins-lot" PRIVATE cxx_std_17)
 
