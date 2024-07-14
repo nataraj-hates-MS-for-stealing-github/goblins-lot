@@ -2,6 +2,12 @@ Goblins' Lot Changelog
 
 -- version 0.25 (future release) --
 
+-- version 0.241 (2024-07-14) --
+
+Bugfix release
+
+* Add missing `goblins-lot.desktop` to git repo ()
+
 -- version 0.24 (2024-06-30) --
 
 * Essential changes:
