@@ -44,11 +44,19 @@ enum CursorType
 	Cursor_Item_Mode
 };
 
+enum RendererType
+{
+	GLOT_RENDERER_UNKNOWN = 0,
+	GLOT_RENDERER_TCOD,
+	GLOT_RENDERER_SDL
+};
+
 class MapRenderer : private boost::noncopyable
 {
 protected:
 	int viewportWidth = -1; /*viewport (window) size in pixels*/
 	int viewportHeight = -1;
+	RendererType renderer_type = GLOT_RENDERER_UNKNOWN;
 public:
 	virtual ~MapRenderer() = 0;
 
@@ -87,4 +95,6 @@ public:
 
 	virtual int GetTileHeight() = 0;
 	virtual int GetTileWidth() = 0;
+
+	RendererType GetRendereType() {return renderer_type;}
 };

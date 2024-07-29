@@ -45,6 +45,7 @@ SDLTilesetRenderer::SDLTilesetRenderer(TCODConsole * mapConsole)
 : TilesetRenderer(mapConsole),
   mapSurface()
 {
+	renderer_type = GLOT_RENDERER_SDL;
 	TCODSystem::registerSDLRenderer(this/*, translucentUI*/);  // FIXME translucentUI came from tcod 1.5.x times. Later should find out how to remove it properly
 	Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN

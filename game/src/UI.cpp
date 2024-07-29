@@ -735,7 +735,7 @@ void UI::ChooseConstruct(ConstructionType construct, UIState state) {
 //	UI::Inst()->blueprint(Construction::Blueprint(construct));
 	UI::Inst()->state(state);
 //	Game::Inst()->Renderer()->SetCursorMode(Cursor_Construct);
-	UI::Inst()->tmp_designate = std::make_shared<DesignateConstruction>(presets.blueprint);
+	UI::Inst()->tmp_designate = std::make_shared<DesignateConstruction>(Game::Inst()->Renderer(), presets.blueprint);
 	UI::Inst()->tmp_designate->SetPlaceConstructionCallback(boost::bind(Game::PlaceConstruction, _1, construct));
 
 	UI::Inst()->HideMenu();
@@ -743,13 +743,20 @@ void UI::ChooseConstruct(ConstructionType construct, UIState state) {
 }
 
 void UI::ChooseStockpile(ConstructionType stockpile) {
+LOG("Const. type = " << stockpile );
+LOG("Const. type = " << stockpile );
+
 	int stockpileSymbol = '%';
 	if (Construction::Presets[stockpile].tags[STOCKPILE]) {
 		UI::Inst()->SetCallback(boost::bind(Game::PlaceStockpile, _1, _1, stockpile, stockpileSymbol));
 		UI::Inst()->state(UI_PLACEMENT);
 	} else {
-		UI::Inst()->SetRectCallback(boost::bind(Game::PlaceStockpile, _1, _2, stockpile, stockpileSymbol));
-		UI::Inst()->state(UI_RECT_PLACEMENT);
+//		UI::Inst()->SetRectCallback(boost::bind(Game::PlaceStockpile, _1, _2, stockpile, stockpileSymbol));
+//		UI::Inst()->state(UI_RECT_PLACEMENT);
+		UI::Inst()->state(UI_DESIGNATE_MODE);
+		UI::Inst()->tmp_designate = std::make_shared<DesignateArea>(Game::Inst()->Renderer());
+
+
 	}
 	UI::Inst()->SetPlacementCallback(boost::bind(Game::CheckPlacement, _1, _2, Construction::Presets[stockpile].tileReqs));
 	UI::Inst()->blueprint(Construction::Blueprint(stockpile));
