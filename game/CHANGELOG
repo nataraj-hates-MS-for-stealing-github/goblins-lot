@@ -2,6 +2,8 @@ Goblins' Lot Changelog
 
 -- version 0.25 (future release) --
 
+* Added TAP test harness for the project ()
+
 -- version 0.241 (2024-07-14) --
 
 Bugfix release

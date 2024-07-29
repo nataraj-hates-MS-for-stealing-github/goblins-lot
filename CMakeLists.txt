@@ -48,6 +48,7 @@ find_package(ZLIB)
 find_package(OpenGL REQUIRED)
 find_package(PNG REQUIRED)
 find_package(libtcod REQUIRED)
+find_package(Prove)
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${PYTHON_INCLUDE_DIRS})
@@ -167,13 +168,14 @@ SET (platform_SRC
 "game/src/platform/linux/DataImpl.cpp"
 )
 
+ADD_LIBRARY(goblins-lot-objs STATIC ${main_SRC} ${data_SRC} ${scripting_SRC} ${libtcod_SRC} ${UI_SRC} ${tileRenderer_SRC} ${platform_SRC})
+
 # linxu specific code
 target_sources("goblins-lot" PRIVATE
     "game/src/platform/unix/main.cpp"
 )
 
-target_sources("goblins-lot" PRIVATE ${main_SRC} ${data_SRC} ${scripting_SRC} ${libtcod_SRC} ${UI_SRC} ${tileRenderer_SRC} ${platform_SRC})
-
+TARGET_LINK_LIBRARIES("goblins-lot" "goblins-lot-objs")
 
 include_directories("goblins-lot" "game/include")
 include_directories("goblins-lot" "vendor/python-modules")
@@ -187,7 +189,7 @@ target_compile_definitions("goblins-lot" PRIVATE GCAMP_USE_THREADS=$<BOOL:${USE_
 target_compile_definitions("goblins-lot" PRIVATE GCAMP_VERSION=\"${GCAMP_VERSION}\")
 target_compile_definitions("goblins-lot" PRIVATE GCAMP_VERSION_IS_RELEASE=$<BOOL:${GCAMP_VERSION_IS_RELEASE}>)
 
-target_link_libraries("goblins-lot"
+TARGET_LINK_LIBRARIES("goblins-lot-objs"
   ${SDL2_LIBRARY}
   ${SDL2_IMAGE_LIBRARY}
   ${PYTHON_LIBRARIES}
@@ -195,6 +197,7 @@ target_link_libraries("goblins-lot"
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SERIALIZATION_LIBRARY}
   ${Boost_IOSTREAMS_LIBRARY}
+  ${Boost_PYTHON3_LIBRARY}
   ${ZLIB_LIBRARIES}
   ${OPENGL_LIBRARIES}
   ${libtcod_LIBRARIES}
@@ -203,6 +206,7 @@ target_link_libraries("goblins-lot"
 # Explciitly include header-only Boost libraries for the configuration provider
 target_include_directories("goblins-lot" PRIVATE ${Boost_INCLUDE_DIRS})
 
-target_link_libraries("goblins-lot" ${Boost_PYTHON3_LIBRARY})
-
 INSTALL(TARGETS "goblins-lot" RUNTIME DESTINATION ${GOBLIN_CAMP_BINDIR})
+
+ADD_SUBDIRECTORY("t")
+
