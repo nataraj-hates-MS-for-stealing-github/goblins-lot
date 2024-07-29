@@ -246,4 +246,18 @@ inline int Distance(const int& x0, const int& y0, const int& x1, const int& y1) 
 static const Coordinate zero(0, 0);
 static const Coordinate undefined(-1, -1);
 
+
+template<class T> class CoordinateMap
+{
+protected:
+	Coordinate corner_min;
+	Coordinate corner_max;
+	int witdth, height;
+	std::vector<T> data;
+public:
+	
+}
+
+
+
 BOOST_CLASS_VERSION(Coordinate, 0)

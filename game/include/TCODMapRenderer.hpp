@@ -17,9 +17,12 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #pragma once
 
 #include "MapRenderer.hpp"
+#include "Designate.hpp"
 
 class TCODMapRenderer : public MapRenderer
 {
+	friend class Designate;
+	friend class DesignateConstruction; // FIXME tmp, please remove
 public:
 	TCODMapRenderer(TCODConsole * mapConsole);
 	~TCODMapRenderer();

@@ -30,6 +30,8 @@ along with Goblin Camp. If not, see <http://www.gnu.org/licenses/>.*/
 #include "JobManager.hpp"
 #include "Color.hpp"
 
+#include "Logger.hpp"
+
 //find a tile adjacent to p which belongs to Stockpile uid
 static bool FindAdjacentTo(const Coordinate& p, int uid, Coordinate *out);
 static bool IsAdjacentTo(const Coordinate& p, int uid);
@@ -291,6 +293,8 @@ boost::weak_ptr<Item> Stockpile::FindItemByType(ItemType typeValue, int flags, i
 int Stockpile::Expand(Coordinate from, Coordinate to) {
 	//The algorithm: Check each tile inbetween from and to, and if a tile is adjacent to this
 	//stockpile, add it. Do this max(width,height) times.
+LOG("!!! "<< to.X() << " - " << from.X() << ", " << to.Y() << " - " <<from.Y());
+LOG(".");
 	int expansion = 0;
 	int repeats = std::max(to.X() - from.X(), to.Y() - from.Y());
 	for (int repeatCount = 0; repeatCount <= repeats; ++repeatCount) {

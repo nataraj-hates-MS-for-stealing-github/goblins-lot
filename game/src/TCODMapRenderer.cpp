@@ -31,6 +31,7 @@ TCODMapRenderer::TCODMapRenderer(TCODConsole * mapConsole) :
 	cursorChar('X'),
 	upleft(0,0)
 {
+	renderer_type = GLOT_RENDERER_TCOD;
 }
 
 TCODMapRenderer::~TCODMapRenderer() {}
