@@ -185,9 +185,9 @@ include_directories("goblins-lot" "vendor/python-modules")
 file(GLOB_RECURSE game_headers CONFIGURE_DEPENDS "game/include/*.hpp")
 target_sources("goblins-lot" PRIVATE ${game_headers})
 
-target_compile_definitions("goblins-lot" PRIVATE GCAMP_USE_THREADS=$<BOOL:${USE_THREADS}>)
-target_compile_definitions("goblins-lot" PRIVATE GCAMP_VERSION=\"${GCAMP_VERSION}\")
-target_compile_definitions("goblins-lot" PRIVATE GCAMP_VERSION_IS_RELEASE=$<BOOL:${GCAMP_VERSION_IS_RELEASE}>)
+target_compile_definitions("goblins-lot-objs" PRIVATE GCAMP_USE_THREADS=$<BOOL:${USE_THREADS}>)
+target_compile_definitions("goblins-lot-objs" PRIVATE GCAMP_VERSION=\"${GCAMP_VERSION}\")
+target_compile_definitions("goblins-lot-objs" PRIVATE GCAMP_VERSION_IS_RELEASE=$<BOOL:${GCAMP_VERSION_IS_RELEASE}>)
 
 TARGET_LINK_LIBRARIES("goblins-lot-objs"
   ${SDL2_LIBRARY}
