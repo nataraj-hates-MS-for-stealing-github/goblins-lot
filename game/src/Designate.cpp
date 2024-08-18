@@ -1,5 +1,6 @@
 /* Copyright 2024 Nikolay Shaplov
-This file is part of Goblin Camp Engine.
+
+This file is part of Goblins' Lot Engine.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
