@@ -48,6 +48,7 @@ public:
 	T& operator[](Coordinate xy);
 	CoordinateMap(Coordinate size): CoordinateMap({0,0}, size - Coordinate(1,1)) {};
 	CoordinateMap(Coordinate c_a, Coordinate c_b);
+	bool is_in_range(Coordinate xy);
 
 };
 
@@ -74,5 +75,19 @@ T& CoordinateMap<T>::operator[](Coordinate xy)
 	ij = xy - corner_min;
 	/* FIXME add range checks? */
 	return data[ij.Y() * width + ij.X()];
+}
+
+template<class T>
+bool CoordinateMap<T>::is_in_range(Coordinate xy)
+{
+	if ( (xy.X() < corner_min.X()) ||
+		 (xy.Y() < corner_min.Y()) ||
+		 (xy.X() > corner_max.X()) ||
+		 (xy.Y() > corner_max.Y())
+	   )
+	{
+		return false;
+	}
+	return true;
 }
 

@@ -35,7 +35,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Game.hpp"
 #include "Designate.hpp"
 #include "Color.hpp"
-
+#include "CoordinateMap.hpp"
 
 #include "Logger.hpp"
 
@@ -125,50 +125,35 @@ void DesignateArea::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft
 	int width =  (c_max-c_min).X() + 1;
 	int height = (c_max-c_min).Y() + 1;
 
-	std::vector<bool> obstacle_map(width * height);
+	CoordinateMap<char> obstacle_map(c_min, c_max);
+
 	for (int i = 0; i < width; i++)
 	for (int j = 0; j < height; j++)
 	{
 		Coordinate xy = c_min + Coordinate(i,j);
-		obstacle_map[i + j*width] = ! Game::Inst()->CheckPlacement(xy, {1,1}, std::set<TileType>());
+		obstacle_map[xy] = ! Game::Inst()->CheckPlacement(xy, {1,1}, std::set<TileType>());
 	}
 
-	std::vector<bool> flooded_map(width * height);
+	CoordinateMap<char> flooded_map(c_min, c_max);
 
-	Coordinate initial = c_a - c_min;
-	flooded_map[initial.X()+initial.Y()*width] = 1;
+	Coordinate initial = c_a;
+	flooded_map[initial] = true;
 	std::list<Coordinate> l = {initial};
 
 	while(l.size())
 	{
-		Coordinate c = l.front();
+		Coordinate xy = l.front();
 		l.pop_front();
-		int i = c.X();
-		int j = c.Y();
+		std::list<Coordinate> ll = {{-1,0},{1,0},{0,-1},{0,1}};
+		for (auto delta : ll)
+		{
+			if (! obstacle_map.is_in_range(xy+delta)) continue; // Ignore out of range tiles
+			if (obstacle_map[xy+delta]) continue; // Skip tiles with obstacle
+			if (flooded_map[xy+delta]) continue;  // Skip tiles that have been already flooded
 
-		if ((i>0) && (! obstacle_map[i-1+j*width]) && (! flooded_map[i-1+j*width]))
-		{
-		   flooded_map[i-1+j*width] = 1;
-		   Coordinate n = {i-1,j};
-		   l.push_back(n);
-		}
-		if ((i<width-1) && (! obstacle_map[i+1+j*width]) && (! flooded_map[i+1+j*width]))
-		{
-		   flooded_map[i+1+j*width] = 1;
-		   Coordinate n = {i+1,j};
-		   l.push_back(n);
-		}
-		if ((j>0) && (! obstacle_map[i+(j-1)*width]) && (! flooded_map[i+(j-1)*width]))
-		{
-		   flooded_map[i+(j-1)*width] = 1;
-		   Coordinate n = {i,j-1};
-		   l.push_back(n);
-		}
-		if ((j<height-1) && (! obstacle_map[i+(j+1)*width]) && (! flooded_map[i+(j+1)*width]))
-		{
-		   flooded_map[i+(j+1)*width] = 1;
-		   Coordinate n = {i,j+1};
-		   l.push_back(n);
+			flooded_map[xy+delta] = true;
+			Coordinate n = xy + delta;
+			l.push_back(n);
 		}
 	}
 
@@ -177,9 +162,9 @@ void DesignateArea::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft
 	{
 		Coordinate xy = c_min + Coordinate(i,j);
 
-		if (! obstacle_map[i + j * width])
+		if (! obstacle_map[xy])
 		{
-			if (flooded_map[i + j * width])
+			if (flooded_map[xy])
 				c_current = &c_suitable;
 			else
 				c_current = &c_noaccess;
