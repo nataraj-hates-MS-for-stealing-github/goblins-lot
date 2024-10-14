@@ -35,7 +35,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Game.hpp"
 #include "Designate.hpp"
 #include "Color.hpp"
-#include "CoordinateMap.hpp"
+#include "CoordExtra.hpp"
 
 #include "Logger.hpp"
 
@@ -125,7 +125,7 @@ void DesignateArea::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft
 	int width =  (c_max-c_min).X() + 1;
 	int height = (c_max-c_min).Y() + 1;
 
-	CoordinateMap<char> obstacle_map(c_min, c_max);
+	CoordMap<char> obstacle_map(c_min, c_max);
 
 	for (int i = 0; i < width; i++)
 	for (int j = 0; j < height; j++)
@@ -134,7 +134,7 @@ void DesignateArea::Draw(TCODConsole* console, Coordinate pos, Coordinate upleft
 		obstacle_map[xy] = ! Game::Inst()->CheckPlacement(xy, {1,1}, std::set<TileType>());
 	}
 
-	CoordinateMap<char> flooded_map(c_min, c_max);
+	CoordMap<char> flooded_map(c_min, c_max);
 
 	Coordinate initial = c_a;
 	flooded_map[initial] = true;

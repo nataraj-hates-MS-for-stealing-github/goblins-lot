@@ -2,7 +2,7 @@
 #include <tap++/tap++.h>
 
 #include "Coordinate.hpp"
-#include "CoordinateMap.hpp"
+#include "CoordExtra.hpp"
 
 using namespace TAP;
 
@@ -11,7 +11,7 @@ int main() {
 
 	{
 		Coordinate size(10,20);
-		CoordinateMap<int> int_map(size);
+		CoordMap<int> int_map(size);
 		for(int i=0; i<10; i++)
 		for(int j=0; j<20; j++)
 		{
@@ -45,7 +45,7 @@ int main() {
 		Coordinate c1(100, 100);
 		Coordinate c2(109, 119);
 
-		CoordinateMap<int> int_map(c1,c2);
+		CoordMap<int> int_map(c1,c2);
 		for(int i=100; i<110; i++)
 		for(int j=100; j<120; j++)
 		{
@@ -79,7 +79,7 @@ int main() {
 		Coordinate c1(100, 100);
 		Coordinate c2(109, 119);
 
-		CoordinateMap<int> int_map(c2, c1);
+		CoordMap<int> int_map(c2, c1);
 		for(int i=100; i<110; i++)
 		for(int j=100; j<120; j++)
 		{
