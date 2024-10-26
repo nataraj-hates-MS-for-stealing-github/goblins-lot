@@ -56,14 +56,14 @@ For other systems you should figure out how to get them.
 #### Building
 
 ```
-git clone https://gitlab.com/dhyannataraj/goblin-camp.git
-mkdir goblin-camp/_build/
-cd goblin-camp/_build/
+git clone https://gitlab.com/dhyannataraj/goblins-lot.git
+mkdir goblins-lot/_build/
+cd goblins-lot/_build/
 cmake ..
 sudo make install
 ```
 
-If everything went well, you can run the game using `goblin-camp` command.
+If everything went well, you can run the game using `goblins-lot` command.
 
 #### Useful configuring options
 
