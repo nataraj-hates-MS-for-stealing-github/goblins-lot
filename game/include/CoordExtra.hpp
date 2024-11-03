@@ -81,26 +81,37 @@ public:
 protected:
 	Coordinate corner_a, corner_b;
 	Coordinate corner_min, corner_max;
+	int width, height;
 
 public:
-	Coordinate c_a() {return corner_a;};
-	Coordinate c_b() {return corner_b;};
-	int width()  {return abs(corner_a.X() - corner_b.X());};
-	int height() {return abs(corner_a.Y() - corner_b.Y());};
+	inline Coordinate CornerA() {return corner_a;};
+	inline Coordinate CornerB() {return corner_b;};
+	inline Coordinate CornerMin() {return corner_min;};
+	inline Coordinate CornerMax() {return corner_max;};
+
+	inline int Width()  {return width;};
+	inline int Height() {return height;};
 
 	bool is_in_range(Coordinate xy);
 
 
-	CoordRange(Coordinate c_a, Coordinate c_b): corner_a(c_a), corner_b(c_b) {
+	CoordRange(Coordinate c_a, Coordinate c_b):
+			corner_a(c_a),
+			corner_b(c_b),
+			width(abs(c_a.X() - c_b.X()) + 1), // + 1 because 9..9 range width is 1
+			height(abs(c_a.Y() - c_b.Y()) + 1)
+
+		{
 		corner_min = Coordinate(
 						 std::min(c_a.X(), c_b.X()),
 						 std::min(c_a.Y(), c_b.Y()));
 		corner_max = Coordinate(
 						 std::max(c_a.X(), c_b.X()),
 						 std::max(c_a.Y(), c_b.Y()));
+
 	};
 	Iterator begin() { return Iterator(corner_min, *this); };
-	Iterator end()   { return ++Iterator(corner_max, *this); }; /*Item that goes after actula last item*/
+	Iterator end()   { return ++Iterator(corner_max, *this); }; /* Item that goes after actula last item */
 };
 
 bool CoordRange::is_in_range(Coordinate xy)
@@ -120,54 +131,33 @@ bool CoordRange::is_in_range(Coordinate xy)
 template<class T> class CoordMap
 {
 protected:
-	Coordinate corner_min;
-	Coordinate corner_max;
-	int width, height;
+	CoordRange range;
 	std::vector<T> data;
 public:
 	T& operator[](Coordinate xy);
+	CoordMap(CoordRange r):
+			range(r),
+			data(std::vector<T>(r.Width() * r.Height())) /* Allocate full range in advance*/
+			{};
+
 	CoordMap(Coordinate size): CoordMap({0,0}, size - Coordinate(1,1)) {};
-	CoordMap(Coordinate c_a, Coordinate c_b);
+	CoordMap(Coordinate c_a, Coordinate c_b): CoordMap(CoordRange(c_a, c_b)) {};
 	bool is_in_range(Coordinate xy);
 
 };
 
 template<class T>
-CoordMap<T>::CoordMap(Coordinate c_a, Coordinate c_b)
-{
-	corner_min = Coordinate(
-					 std::min(c_a.X(), c_b.X()),
-					 std::min(c_a.Y(), c_b.Y()));
-	corner_max = Coordinate(
-					 std::max(c_a.X(), c_b.X()),
-					 std::max(c_a.Y(), c_b.Y()));
-	width = corner_max.X() - corner_min.X() + 1;
-	height = corner_max.Y() - corner_min.Y() + 1;
-
-	data = std::vector<T>(width*height); // Allocate full range
-
-}
-
-template<class T>
 T& CoordMap<T>::operator[](Coordinate xy)
 {
 	Coordinate ij;
-	ij = xy - corner_min;
+	ij = xy - range.CornerMin();
 	/* FIXME add range checks? */
-	return data[ij.Y() * width + ij.X()];
+	return data[ij.Y() * range.Width() + ij.X()];
 }
 
 template<class T>
 bool CoordMap<T>::is_in_range(Coordinate xy)
 {
-	if ( (xy.X() < corner_min.X()) ||
-		 (xy.Y() < corner_min.Y()) ||
-		 (xy.X() > corner_max.X()) ||
-		 (xy.Y() > corner_max.Y())
-	   )
-	{
-		return false;
-	}
-	return true;
+	return range.is_in_range(xy);
 }
 

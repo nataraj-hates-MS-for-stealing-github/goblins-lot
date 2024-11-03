@@ -26,6 +26,15 @@ IF (USE_THREADS)
   MESSAGE(STATUS "Using threads")
 ELSE()
   MESSAGE(STATUS "Using no threads")
+
+ENDIF()
+
+
+SET (USE_ASAN TRUE CACHE BOOL "Use ASan sanitizer while building")
+IF (USE_ASAN)
+			SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fsanitize=address -g -O0 -std=c++17")
+	SET(CMAKE_CXX_COMPILER "clang++-14")
+	MESSAGE(STATUS "Using ASan sanitizer")
 ENDIF()
 
 SET(GOBLIN_CAMP_BINDIR ${CMAKE_INSTALL_PREFIX}/games CACHE PATH "Path to Goblins' Lot binary")
