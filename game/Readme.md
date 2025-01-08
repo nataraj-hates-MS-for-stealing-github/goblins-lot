@@ -91,6 +91,22 @@ You can change the resolution and switch between windowed/full screen mode by
 editing config.py which you'll find in your
 /Documents/My Games/Goblin camp/ folder (or equivalent).
 
+DevConsole
+----------
+
+DevConsole was presumably created to access game internals for development
+purposes. Not much is known about DevConsole.
+
+To enable DevConsole you should start Goblins' Lot with `-dev` command line
+argument. Then you can press `` ` `` key to get to the DevConsole. There you can type
+python expressions, like `19-5` or `sys.version`, they will be evaluated.
+
+Shift key does not work in the Console, so you will not be able to type much.
+
+I guess python API for accessing game internals is defined in
+`game/src/scripting/_gcampapi`, but I didn't figure out how to use it.
+
+
 --
 
 Licensing information is in COPYING.txt
