@@ -1,0 +1,10 @@
+/* This mod is based on example from */
+/* http://web.archive.org/web/20110808012614/http://goblincampwiki.com/wiki/index.php?title=Mod_Repository#expand */
+
+mod {
+	name = "examplemod"
+	author = "John Doe"
+	version = "1.0"
+	apiVersion = 0
+}
+

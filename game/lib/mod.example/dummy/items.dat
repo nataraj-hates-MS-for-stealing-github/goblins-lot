@@ -1,0 +1,8 @@
+item_type "New food" {
+   category = ["Prepared food"]
+   graphic = 37
+   color_ = "255,0,200"
+   components = ["Berry", "Berry", "Flour", "Flour"]
+   nutrition = 90000
+   constructedin = "Kitchen"
+}

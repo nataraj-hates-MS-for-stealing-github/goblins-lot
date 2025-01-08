@@ -1,0 +1,11 @@
+construction_type "New workshop" {
+   category="Workshops"
+   graphicLength=3
+   graphic=[47, 126, 92,
+          179, 127, 179]
+   walkable
+   maxCondition=10
+   productionx=1
+   productiony=1
+   materials=["Plank","Plank","Plank","Plank","Plank"]
+}

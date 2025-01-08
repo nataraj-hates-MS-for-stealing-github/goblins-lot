@@ -1,0 +1,22 @@
+npc_type "newcreature" { 
+   name="New creature"
+   tags=["localWildlife"]
+   color_="100,100,140"
+   graphic='p'
+   AI="PeacefulAnimal"
+   stats {
+      speed=25
+      health=5
+      dodge=8
+      size=2
+   }
+   resistances {
+      physical=5
+   }
+   attack "Beak" {
+      type="piercing"
+      damage="1d1"
+      cooldown=3
+   }
+   spawnAsGroup="1d2"
+}
