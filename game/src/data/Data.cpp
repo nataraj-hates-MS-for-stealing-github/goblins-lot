@@ -279,15 +279,15 @@ namespace Data {
 		LOG("Loading user config.");
 		const fs::path& config = Paths::Get(Paths::Config);
 		CreateDefault(config, "## Goblin Camp default empty configuration file");
+		try {
 		
 		py::object globals = py::import("_gcampconfig").attr("__dict__");
 		py::object locals  = py::import("__gcuserconfig__").attr("__dict__");
-		try {
 			py::exec_file(config.string().c_str(), globals, locals);
 		} catch (const py::error_already_set&) {
 			LOG("Cannot load user config.");
 			Script::LogException();
-			return;
+			exit(1);
 		}
 		
 		atexit(SaveConfig);

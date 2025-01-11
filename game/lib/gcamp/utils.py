@@ -26,3 +26,34 @@ def _getModName(stackLevel):
 		return os.path.basename(os.path.dirname(filename))
 	else:
 		return '<unknown>'
+
+from importlib import machinery
+from importlib import util
+
+# This function reimplement beaviour of load_package from depricated Imp module
+# Code copied from https://github.com/python/cpython/blob/3.11/Lib/imp.py#L200
+# and updaed to work in our situatuin
+
+def load_package(name, path):
+	if os.path.isdir(path):
+		extensions = (machinery.SOURCE_SUFFIXES[:] +
+						machinery.BYTECODE_SUFFIXES[:])
+		for extension in extensions:
+			init_path = os.path.join(path, '__init__' + extension)
+			if os.path.exists(init_path):
+				path = init_path
+				break
+		else:
+			raise ValueError('{!r} is not a package'.format(path))
+	spec = util.spec_from_file_location(name, path,
+										submodule_search_locations=[])
+	if name in sys.modules:
+		module = sys.modules[name]
+		spec.loader.exec_module(module)
+		return module
+	else:
+		module = util.module_from_spec(spec)
+		sys.modules[name] = module
+		spec.loader.exec_module(module)
+		return module
+

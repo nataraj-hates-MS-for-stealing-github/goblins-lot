@@ -66,7 +66,7 @@ PyMODINIT_FUNC PyInit_time();
 
 namespace Script {
 	const short version = 0;
-	
+
 	void Init(std::vector<std::string>& args) {
 		LOG("Initialising the engine.");
 
@@ -126,41 +126,44 @@ namespace Script {
 		try {
 			// Get utility functions.
 			LOG("Importing Python modules");
-			py::object modImp = py::import("imp");
+			py::object modImpUtil = py::import("importlib.util");
+			py::object modSys = py::import("sys");
+
 			py::object modTB  = py::import("traceback");
-			
+
 			Globals::printExcFunc    = modTB.attr("print_exception");
-			Globals::loadPackageFunc = modImp.attr("load_package");
-			
+
 			LOG("Creating internal namespaces.");
 			PyImport_AddModule("__gcmods__");
 			PyImport_AddModule("__gcuserconfig__");
 			PyImport_AddModule("__gcautoexec__");
-			PyImport_AddModule("__gcdevconsole__");
-			
+
 			LOG("Setting up console namespace. If you get 'No module named XXXX' error message below, " <<
 				"check " << Paths::Get(Paths::GlobalData) / "lib" << " and make sure that module is really there");
 			fs::path file_name = Paths::Get(Paths::GlobalData) / "lib" / "__gcdevconsole__.py";
-			if (fs::exists(file_name))
-			{
-				modImp.attr("load_source")("__gcdevconsole__", file_name.string());
-			} else
+			if (! fs::exists(file_name))
 			{
 				LOG("ERROR. File not found: " << file_name );
 				exit(20);
 			}
-			
+
+			py::object spec = modImpUtil.attr("spec_from_file_location")("__gcdevconsole__", file_name.string());
+			py::object mod = modImpUtil.attr("module_from_spec")(spec);
+			spec.attr("loader").attr("exec_module")(mod);
+			modSys.attr("modules")["test_module"] = mod;
+			Globals::loadPackageFunc = mod.attr("gcamp").attr("utils").attr("load_package");
+
 			py::exec(
 				"log.info('Console ready.')", py::import("__gcdevconsole__").attr("__dict__")
 			);
 		} catch (const py::error_already_set&) {
 			LogBootstrapException();
-			
+
 			LOG("Bootstrap has failed, exiting.");
 			exit(20);
 		}
 	}
-	
+
 	void Shutdown() {
 		LOG("Shutting down engine.");
 		
