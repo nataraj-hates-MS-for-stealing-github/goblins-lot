@@ -150,7 +150,7 @@ namespace Script {
 			py::object spec = modImpUtil.attr("spec_from_file_location")("__gcdevconsole__", file_name.string());
 			py::object mod = modImpUtil.attr("module_from_spec")(spec);
 			spec.attr("loader").attr("exec_module")(mod);
-			modSys.attr("modules")["test_module"] = mod;
+			modSys.attr("modules")["__gcdevconsole__"] = mod;
 			Globals::loadPackageFunc = mod.attr("gcamp").attr("utils").attr("load_package");
 
 			py::exec(
