@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0) # Do not raise it without a reason. Bump only when you use some feature that is not supported by older verions
+cmake_minimum_required(VERSION 3.12.0) # Do not raise it without a reason. Bump only when you use some feature that is not supported by older verions
 
 # set the project name
 project(GoblinsLot C CXX)
@@ -36,7 +36,7 @@ find_package(Boost REQUIRED COMPONENTS system filesystem serialization iostreams
 find_package(Boost COMPONENTS python REQUIRED)
 
 find_package(Boost COMPONENTS python3 REQUIRED)
-find_package(PythonLibs 3 REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Development)
 
 if (POLICY CMP0072)
   set(OpenGL_GL_PREFERENCE GLVND)
@@ -51,7 +51,7 @@ find_package(libtcod REQUIRED)
 find_package(Prove)
 
 include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(${Python3_INCLUDE_DIRS})
 include_directories(${PNG_INCLUDE_DIR})
 include_directories(${libtcod_INCLUDE_DIR})
 
@@ -192,7 +192,7 @@ target_compile_definitions("goblins-lot-objs" PRIVATE GCAMP_VERSION_IS_RELEASE=$
 TARGET_LINK_LIBRARIES("goblins-lot-objs"
   ${SDL2_LIBRARY}
   ${SDL2_IMAGE_LIBRARY}
-  ${PYTHON_LIBRARIES}
+  ${Python3_LIBRARIES}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SERIALIZATION_LIBRARY}
