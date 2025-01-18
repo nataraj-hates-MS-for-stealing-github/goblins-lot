@@ -33,42 +33,82 @@ namespace py = boost::python;
 
 namespace Script { namespace Event {
 	void GameStart() {
-		Script::InvokeListeners("onGameStart");
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::InvokeListeners("onGameStart");
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	void GameEnd() {
-		Script::InvokeListeners("onGameEnd");
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::InvokeListeners("onGameEnd");
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	void GameSaved(const std::string& filename) {
-		Script::InvokeListeners("onGameSaved", "(s)", filename.c_str());
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::InvokeListeners("onGameSaved", "(s)", filename.c_str());
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	void GameLoaded(const std::string& filename) {
-		Script::InvokeListeners("onGameLoaded", "(s)", filename.c_str());
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::InvokeListeners("onGameLoaded", "(s)", filename.c_str());
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	void BuildingCreated(boost::weak_ptr<Construction> cons, int x, int y) {
-		Script::API::PyConstruction pyconstruction(cons);
-		py::object obj(boost::ref(pyconstruction));
-		Script::InvokeListeners("onBuildingCreated", "(Oii)", obj.ptr(), x, y);
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::API::PyConstruction pyconstruction(cons);
+			py::object obj(boost::ref(pyconstruction));
+			Script::InvokeListeners("onBuildingCreated", "(Oii)", obj.ptr(), x, y);
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	void BuildingDestroyed(boost::weak_ptr<Construction> cons, int x, int y) {
-		Script::API::PyConstruction pyconstruction(cons);
-		py::object obj(boost::ref(pyconstruction));
-		Script::InvokeListeners("onBuildingDestroyed", "(Oii)", obj.ptr(), x, y);
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::API::PyConstruction pyconstruction(cons);
+			py::object obj(boost::ref(pyconstruction));
+			Script::InvokeListeners("onBuildingDestroyed", "(Oii)", obj.ptr(), x, y);
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	void ItemCreated(boost::weak_ptr<Item> item, int x, int y) {
-		Script::API::PyItem pyitem(item);
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::API::PyItem pyitem(item);
 		
-		py::object obj(boost::ref(pyitem));
-		Script::InvokeListeners("onItemCreated", "(Oii)", obj.ptr(), x, y);
+			py::object obj(boost::ref(pyitem));
+			Script::InvokeListeners("onItemCreated", "(Oii)", obj.ptr(), x, y);
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	void TierChanged(int tier, const std::string& campName) {
-		Script::InvokeListeners("onTierChanged", "(is)", tier, campName.c_str());
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+		{
+			Script::InvokeListeners("onTierChanged", "(is)", tier, campName.c_str());
+		}
+		PyGILState_Release(gstate);
 	}
 	
 	/*void ItemDestroyed(Item*, int, int) {

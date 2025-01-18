@@ -539,6 +539,12 @@ void Game::ProgressScreen(boost::function<void(void)> blockingCall, bool isLoadi
 	// make copies before launching the thread
 	int x = Game::Inst()->screenWidth  / 2;
 	int y = Game::Inst()->screenHeight / 2;
+
+	// Release Global Interpreter Lock if we are holding one
+	// Pyhon is not needed here, but is needed in another thread that
+	// loads objects and call python callbacks
+	if (PyGILState_Check())
+		PyEval_SaveThread();
 	
 	DrawProgressScreen(x, y, 0, isLoading);
 
@@ -1104,6 +1110,9 @@ void Game::Update() {
 
 	if (time % (UPDATES_PER_SECOND * 1) == 0) Camp::Inst()->Update();
 
+	PyGILState_STATE gstate;
+	gstate = PyGILState_Ensure();  // Grab Global Interpreter Lock before doing python related stuff
+
 	for (std::list<std::pair<int, boost::function<void()> > >::iterator delit = delays.begin(); delit != delays.end();) {
 		if (--delit->first <= 0) {
 			try {
@@ -1114,6 +1123,8 @@ void Game::Update() {
 			delit = delays.erase(delit);
 		} else ++delit;
 	}
+
+	PyGILState_Release(gstate);
 
 	if (!gameOver && orcCount == 0 && goblinCount == 0) {
 		gameOver = true;

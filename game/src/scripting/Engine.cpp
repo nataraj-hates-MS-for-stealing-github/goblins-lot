@@ -166,6 +166,11 @@ namespace Script {
 
 	void Shutdown() {
 		LOG("Shutting down engine.");
+
+		// Grab Global Interpreter Lock before doing python related stuff
+		// Never release it, as it will be gone with Py_Finilize()
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure();
 		
 		ReleaseListeners();
 
@@ -179,12 +184,16 @@ namespace Script {
 	
 	void LoadScript(const std::string& mod, const std::string& directory) {
 		LOG("Loading '" << directory << "' into '__gcmods__." << mod << "'.");
-		
+
+		PyGILState_STATE gstate;
+		gstate = PyGILState_Ensure(); // Grab Global Interpreter Log before doing python stuff
+
 		try {
 			Globals::loadPackageFunc("__gcmods__." + mod, directory);
 		} catch (const py::error_already_set&) {
 			LogException();
 		}
+		PyGILState_Release(gstate);
 	}
 	
 	void ExtractException(py::object& excType, py::object& excValue, py::object& excTB) {
